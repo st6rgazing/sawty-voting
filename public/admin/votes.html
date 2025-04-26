@@ -161,7 +161,8 @@
             document.getElementById('blockchain').innerHTML = '';
             
             try {
-                const response = await fetch('/api/admin/votes');
+                const response = await fetch('https://sawty-api.onrender.com/api/admin/votes');
+;
                 const votes = await response.json();
                 
                 document.getElementById('loading').style.display = 'none';

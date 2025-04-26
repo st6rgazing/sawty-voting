@@ -286,7 +286,7 @@ app.get("/__debug", (req, res) => {
 // --- Start server first, then load data ---
 console.log("🚀 Attempting to start server...")
 app.listen(port, () => {
-  console.log(`🗳️ Sawty backend running at http://localhost:${port}`)
+  // console.log(`🗳️ Sawty backend running at http://localhost:${port}`)
 
   console.log("📂 Loading votes file...")
   // Load votes file asynchronously after server starts
