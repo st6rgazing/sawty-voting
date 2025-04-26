@@ -1,8 +1,82 @@
-import Link from "next/link"
+"use client"
+
+import type React from "react"
+
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { ArrowRight, KeyRound, Mail } from "lucide-react"
+import { verifySecretId, requestSecretId } from "@/lib/api"
+import { decrypt } from "@/lib/encryption"
 
 export default function Home() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [secretId, setSecretId] = useState("")
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  // Check for token in URL - only autofill, don't auto-submit
+  useEffect(() => {
+    const token = searchParams.get("token")
+    if (token) {
+      try {
+        // Decrypt the token to get the secret ID
+        const decryptedSecretId = decrypt(token)
+        setSecretId(decryptedSecretId)
+        // No auto-submit
+      } catch (err) {
+        console.error("Error decrypting token:", err)
+        setError("Invalid or expired token. Please request a new one.")
+      }
+    }
+  }, [searchParams])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    if (!secretId) {
+      setError("Please enter your Secret ID")
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const { success, data } = await verifySecretId(secretId)
+
+      if (success && data.valid) {
+        // Store the secret ID in localStorage
+        localStorage.setItem("secretId", secretId)
+        router.push("/candidates")
+      } else {
+        setError(data.message || "Invalid or expired Secret ID")
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleResendSecretId = async () => {
+    // In a real app, this would open a modal or form to enter email
+    const email = prompt("Enter your email:")
+    if (!email) return
+
+    try {
+      const { success, data } = await requestSecretId(email)
+      alert(data.message)
+    } catch (err) {
+      alert("Failed to resend. Please try again later.")
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="relative overflow-hidden">
@@ -11,7 +85,7 @@ export default function Home() {
         <div className="absolute top-1/2 -right-24 w-96 h-96 bg-blue-200 dark:bg-blue-900/20 rounded-full blur-3xl opacity-30"></div>
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-1/2 bg-gradient-to-t from-white/10 to-transparent dark:from-black/10"></div>
 
-        <div className="container mx-auto px-4 py-24 relative z-10">
+        <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-block mb-6 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full">
               <div className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full text-sm font-medium text-purple-800 dark:text-purple-200">
@@ -23,19 +97,57 @@ export default function Home() {
               Welcome to Sawty
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-12">
+            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8">
               Your secure, quantum-powered e-voting platform that ensures tamper-proof elections with cutting-edge
               technology
             </p>
 
-            <Link href="/technology">
-              <Button
-                size="lg"
-                className="rounded-full px-8 py-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-              >
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+            <div className="max-w-md mx-auto mb-8">
+              <Card className="border-0 shadow-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+                <CardContent className="pt-6">
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="secret-id">Enter Your Secret ID</Label>
+                      <div className="relative">
+                        <KeyRound className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                        <Input
+                          id="secret-id"
+                          type="text"
+                          placeholder="Enter your Secret ID"
+                          value={secretId}
+                          onChange={(e) => setSecretId(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                    </div>
+
+                    {error && (
+                      <Alert variant="destructive" className="py-2">
+                        <AlertDescription>{error}</AlertDescription>
+                      </Alert>
+                    )}
+
+                    <Button
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                      disabled={loading}
+                    >
+                      {loading ? "Verifying..." : "Access Voting"} <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="w-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+                      onClick={handleResendSecretId}
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      Lost your Secret ID? Click here to resend it
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
