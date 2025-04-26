@@ -13,7 +13,7 @@ import { Info, ArrowRight } from "lucide-react"
 const candidates = [
   {
     id: "1",
-    name: "Alex Johnson",
+    name: "Team 6",
     party: "Progressive Party",
     image: "/placeholder.svg?height=300&width=300",
     shortDescription: "Committed to environmental sustainability and social justice.",
@@ -22,30 +22,12 @@ const candidates = [
   },
   {
     id: "2",
-    name: "Sam Rivera",
+    name: "Also Team 6",
     party: "Liberty Alliance",
     image: "/placeholder.svg?height=300&width=300",
     shortDescription: "Advocating for economic growth and individual freedoms.",
     fullDescription:
       "Sam Rivera is a business leader with a strong track record of creating jobs and stimulating economic growth. Sam believes in reducing regulations that hamper small businesses and advocates for policies that empower individuals to achieve their full potential.",
-  },
-  {
-    id: "3",
-    name: "Jordan Taylor",
-    party: "Unity Coalition",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Building bridges across political divides for common progress.",
-    fullDescription:
-      "Jordan Taylor has served as a mediator in various political contexts, bringing opposing sides together to find common ground. With experience in both the public and private sectors, Jordan focuses on practical solutions that can gain support across the political spectrum.",
-  },
-  {
-    id: "4",
-    name: "Morgan Lee",
-    party: "Future Forward",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Embracing technology and innovation to solve tomorrow's challenges.",
-    fullDescription:
-      "Morgan Lee is a tech entrepreneur and policy innovator who believes in harnessing the power of technology to address society's most pressing challenges. Morgan advocates for investment in education, research, and digital infrastructure to prepare citizens for the jobs of the future.",
   },
 ]
 
