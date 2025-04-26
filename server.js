@@ -187,7 +187,6 @@ app.post("/api/submit-vote", async (req, res) => {
   }
 
   try {
-
     // Also save to local file as backup
     votes.push({ secretId, encryptedVote, timestamp: new Date().toISOString() })
     fs.writeFileSync(votesFile, JSON.stringify(votes, null, 2))
@@ -219,8 +218,7 @@ app.post("/api/verify-secret", (req, res) => {
 
 // ✅ Admin View Votes
 app.get("/api/admin/votes", async (req, res) => {
-    res.json(votes)
-  
+  res.json(votes)
 })
 
 // ✅ Admin votes.json for Blockchain Frontend
@@ -278,6 +276,19 @@ app.get("/api/voters/:secretId", async (req, res) => {
   }
 })
 
+// Delete a mapping (admin function)
+app.delete("/api/admin/mappings/:secretId", (req, res) => {
+  const { secretId } = req.params
+
+  if (issuedSecrets[secretId]) {
+    delete issuedSecrets[secretId]
+    saveSecrets() // Save to file
+    res.json({ success: true, message: "Mapping deleted successfully" })
+  } else {
+    res.status(404).json({ success: false, message: "Mapping not found" })
+  }
+})
+
 // ✅ Debug
 app.get("/__debug", (req, res) => {
   res.send("✅ This is the REAL Sawty server running.")
@@ -312,3 +323,10 @@ app.listen(port, () => {
       }
     })
 })
+
+function saveSecrets() {
+  // Implement the logic to save issuedSecrets to a file or database
+  // This is a placeholder, replace with your actual implementation
+  console.log("Saving secrets to file (placeholder)")
+  fs.writeFileSync("secrets.json", JSON.stringify(issuedSecrets, null, 2))
+}
