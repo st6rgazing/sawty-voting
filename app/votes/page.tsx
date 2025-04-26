@@ -20,7 +20,7 @@ export default function VotesPage() {
   useEffect(() => {
     async function loadVotes() {
       try {
-        const res = await fetch('https://sawty.onrender.com/admin/votes.json');
+        const res = await fetch('https://sawty.onrender.com/api/admin/votes.json');
         const data = await res.json()
 
 
