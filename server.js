@@ -46,21 +46,6 @@ if (fs.existsSync(votesFile)) {
 }
 
 // --- DB CONNECTION ---
-console.log("📡 Attempting to connect to MongoDB...")
-const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/eVotingDB"
-mongoose
-  .connect(mongoURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    connectTimeoutMS: 10000,
-    serverSelectionTimeoutMS: 10000,
-  })
-  .then(() => console.log("✅ Connected to MongoDB"))
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err)
-    console.log("🚀 Continuing server startup despite MongoDB error...")
-  })
-
 // --- Email Transporter ---
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -202,13 +187,6 @@ app.post("/api/submit-vote", async (req, res) => {
   }
 
   try {
-    const vote = new Vote({
-      secretId,
-      encryptedVote,
-      timestamp: new Date().toISOString(),
-    })
-
-    await vote.save()
 
     // Also save to local file as backup
     votes.push({ secretId, encryptedVote, timestamp: new Date().toISOString() })
@@ -241,19 +219,8 @@ app.post("/api/verify-secret", (req, res) => {
 
 // ✅ Admin View Votes
 app.get("/api/admin/votes", async (req, res) => {
-  try {
-    const votesDB = await Vote.find({}).sort({ timestamp: 1 })
-    if (votesDB && votesDB.length > 0) {
-      res.json(votesDB)
-    } else {
-      // Fallback to local file if DB is empty
-      res.json(votes)
-    }
-  } catch (err) {
-    console.error("Error fetching votes from DB:", err)
-    // Fallback to local file if DB query fails
     res.json(votes)
-  }
+  
 })
 
 // ✅ Admin votes.json for Blockchain Frontend
