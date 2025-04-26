@@ -7,9 +7,7 @@ const path = require("path")
 
 console.log("✅ All modules loaded")
 
-// Import models
-const Vote = require("./models/vote")
-const Voter = require("./models/voter")
+
 
 const app = express()
 const port = process.env.PORT || 3000
