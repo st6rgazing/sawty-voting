@@ -35,7 +35,7 @@ export async function POST(request: Request) {
 
       // Encrypt the secret ID for the URL
       const encryptedSecretId = encrypt(secretId)
-      const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000"
+      const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app/"
       const loginLink = `${frontendBaseURL}/login?token=${encodeURIComponent(encryptedSecretId)}`
 
       // Send email with the login link

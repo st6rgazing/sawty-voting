@@ -4,7 +4,6 @@ const nodemailer = require("nodemailer")
 const cors = require("cors")
 const fs = require("fs")
 const path = require("path")
-const mongoose = require("mongoose")
 
 console.log("✅ All modules loaded")
 
@@ -24,7 +23,7 @@ app.use(express.static(path.join(__dirname, "public")))
 console.log("✅ Express middleware setup complete")
 
 // --- CONFIG ---
-const frontendBaseURL = process.env.FRONTEND_URL || "http://localhost:3000"
+const frontendBaseURL = process.env.FRONTEND_URL || "https://sawty-voting.vercel.app"
 const encryptionKey = process.env.ENCRYPTION_KEY || "12345678901234567890123456789012" // 32 characters
 const iv = Buffer.alloc(16, 0) // 16 bytes all zeros IV
 
