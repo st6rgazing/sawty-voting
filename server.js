@@ -93,7 +93,7 @@ app.post("/api/generate-for-all", async (req, res) => {
     }
 
     const encryptedSecretId = encrypt(secretId)
-    const loginLink = `${frontendBaseURL}/login?token=${encodeURIComponent(encryptedSecretId)}`
+    const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSecretId)}`
 
     const mailOptions = {
       from: `"Sawty Voting" <${process.env.EMAIL_USER || "mariamshafey3@gmail.com"}>`,
@@ -141,7 +141,7 @@ app.post("/api/generate-secret", async (req, res) => {
   }
 
   const encryptedSecretId = encrypt(secretId)
-  const loginLink = `${frontendBaseURL}/login?token=${encodeURIComponent(encryptedSecretId)}`
+  const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSecretId)}`
 
   const mailOptions = {
     from: `"Sawty Voting" <${process.env.EMAIL_USER || "mariamshafey3@gmail.com"}>`,
