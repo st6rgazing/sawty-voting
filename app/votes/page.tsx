@@ -20,37 +20,36 @@ export default function VotesPage() {
   useEffect(() => {
     async function loadVotes() {
       try {
-        // In a real app, this would fetch from your actual API
-        // const res = await fetch('https://sawty.onrender.com/admin/votes.json');
+        const res = await fetch('https://sawty.onrender.com/admin/votes.json');
 
         // For demo purposes, we'll use mock data
-        const mockVotes: Vote[] = [
-          {
-            secretId: "a1b2c3d4e5f6g7h8",
-            encryptedVote: "cand-jane-92a7",
-            timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
-          },
-          {
-            secretId: "h8g7f6e5d4c3b2a1",
-            encryptedVote: "cand-john-5b2f",
-            timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(), // 25 minutes ago
-          },
-          {
-            secretId: "z9y8x7w6v5u4t3s2",
-            encryptedVote: "cand-emily-7d8c",
-            timestamp: new Date(Date.now() - 1000 * 60 * 20).toISOString(), // 20 minutes ago
-          },
-          {
-            secretId: "s2t3u4v5w6x7y8z9",
-            encryptedVote: "cand-jane-92a7",
-            timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(), // 15 minutes ago
-          },
-          {
-            secretId: "p1o2n3m4l5k6j7i8",
-            encryptedVote: "cand-john-5b2f",
-            timestamp: new Date(Date.now() - 1000 * 60 * 10).toISOString(), // 10 minutes ago
-          },
-        ]
+        // const mockVotes: Vote[] = [
+        //   {
+        //     secretId: "a1b2c3d4e5f6g7h8",
+        //     encryptedVote: "cand-jane-92a7",
+        //     timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
+        //   },
+        //   {
+        //     secretId: "h8g7f6e5d4c3b2a1",
+        //     encryptedVote: "cand-john-5b2f",
+        //     timestamp: new Date(Date.now() - 1000 * 60 * 25).toISOString(), // 25 minutes ago
+        //   },
+        //   {
+        //     secretId: "z9y8x7w6v5u4t3s2",
+        //     encryptedVote: "cand-emily-7d8c",
+        //     timestamp: new Date(Date.now() - 1000 * 60 * 20).toISOString(), // 20 minutes ago
+        //   },
+        //   {
+        //     secretId: "s2t3u4v5w6x7y8z9",
+        //     encryptedVote: "cand-jane-92a7",
+        //     timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString(), // 15 minutes ago
+        //   },
+        //   {
+        //     secretId: "p1o2n3m4l5k6j7i8",
+        //     encryptedVote: "cand-john-5b2f",
+        //     timestamp: new Date(Date.now() - 1000 * 60 * 10).toISOString(), // 10 minutes ago
+        //   },
+        // ]
 
         setVotes(mockVotes)
         setLoading(false)
