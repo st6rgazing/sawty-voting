@@ -5,7 +5,7 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ""
 // Verify a secret ID
 export async function verifySecretId(secretId: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/verify-secret`, {
+    const response = await fetch(`${API_BASE_URL}/verify-secret`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ secretId }),
@@ -27,7 +27,7 @@ export async function verifySecretId(secretId: string) {
 // Submit a vote
 export async function submitVote(secretId: string, encryptedVote: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/submit-vote`, {
+    const response = await fetch(`${API_BASE_URL}/submit-vote`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ secretId, encryptedVote }),
@@ -48,7 +48,7 @@ export async function submitVote(secretId: string, encryptedVote: string) {
 // Request a new Secret ID
 export async function requestSecretId(email: string) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/generate-secret`, {
+    const response = await fetch(`${API_BASE_URL}/generate-secret`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
@@ -69,7 +69,7 @@ export async function requestSecretId(email: string) {
 // Generate Secret IDs for all registered voters (admin function)
 export async function generateForAll() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/generate-for-all`, {
+    const response = await fetch(`${API_BASE_URL}/generate-for-all`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })
@@ -89,7 +89,7 @@ export async function generateForAll() {
 // Get all votes (admin function)
 export async function getVotes() {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/admin/votes`)
+    const response = await fetch(`${API_BASE_URL}/admin/votes`)
     const data = await response.json()
     return { success: response.ok, data }
   } catch (error) {
