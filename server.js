@@ -19,6 +19,8 @@ const port = process.env.PORT || 3000
 console.log("⌛ Setting up Express middleware...")
 app.use(cors())
 app.use(express.json())
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, "public")))
 console.log("✅ Express middleware setup complete")
 
 // --- CONFIG ---
@@ -35,7 +37,13 @@ let votes = [] // fallback if MongoDB fails
 
 const votesFile = path.join(__dirname, "votes.json")
 if (fs.existsSync(votesFile)) {
-  votes = JSON.parse(fs.readFileSync(votesFile))
+  try {
+    votes = JSON.parse(fs.readFileSync(votesFile))
+  } catch (err) {
+    console.error("❌ Error reading votes file:", err)
+    // Create an empty votes file if it doesn't exist or is corrupted
+    fs.writeFileSync(votesFile, JSON.stringify([]))
+  }
 }
 
 // --- DB CONNECTION ---
@@ -45,8 +53,8 @@ mongoose
   .connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    connectTimeoutMS: 5000,
-    serverSelectionTimeoutMS: 5000,
+    connectTimeoutMS: 10000,
+    serverSelectionTimeoutMS: 10000,
   })
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => {
@@ -202,6 +210,11 @@ app.post("/api/submit-vote", async (req, res) => {
     })
 
     await vote.save()
+
+    // Also save to local file as backup
+    votes.push({ secretId, encryptedVote, timestamp: new Date().toISOString() })
+    fs.writeFileSync(votesFile, JSON.stringify(votes, null, 2))
+
     delete issuedSecrets[secretId]
 
     console.log(`✅ Vote recorded in DB for Secret ID ${secretId}`)
@@ -230,11 +243,17 @@ app.post("/api/verify-secret", (req, res) => {
 // ✅ Admin View Votes
 app.get("/api/admin/votes", async (req, res) => {
   try {
-    const votesDB = await Vote.find({})
-    res.json(votesDB)
+    const votesDB = await Vote.find({}).sort({ timestamp: 1 })
+    if (votesDB && votesDB.length > 0) {
+      res.json(votesDB)
+    } else {
+      // Fallback to local file if DB is empty
+      res.json(votes)
+    }
   } catch (err) {
     console.error("Error fetching votes from DB:", err)
-    res.status(500).json({ message: "Internal server error." })
+    // Fallback to local file if DB query fails
+    res.json(votes)
   }
 })
 
@@ -308,14 +327,22 @@ app.listen(port, () => {
   fs.promises
     .readFile(votesFile)
     .then((data) => {
-      votes = JSON.parse(data)
-      console.log("✅ Votes data loaded")
+      try {
+        votes = JSON.parse(data)
+        console.log("✅ Votes data loaded")
+      } catch (err) {
+        console.error("❌ Error parsing votes file:", err)
+        votes = []
+        fs.writeFileSync(votesFile, JSON.stringify([]))
+      }
     })
     .catch((err) => {
       if (err.code !== "ENOENT") {
         console.error("❌ Error loading votes file:", err)
       } else {
         console.log("ℹ️ No existing votes file found - starting fresh")
+        // Create an empty votes file
+        fs.writeFileSync(votesFile, JSON.stringify([]))
       }
     })
 })
