@@ -21,6 +21,8 @@ export default function VotesPage() {
     async function loadVotes() {
       try {
         const res = await fetch('https://sawty.onrender.com/admin/votes.json');
+        const data = await res.json()
+
 
         // For demo purposes, we'll use mock data
         // const mockVotes: Vote[] = [
@@ -51,7 +53,7 @@ export default function VotesPage() {
         //   },
         // ]
 
-        setVotes(mockVotes)
+        setVotes(data)
         setLoading(false)
       } catch (err) {
         console.error("Failed to load votes:", err)
