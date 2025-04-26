@@ -109,45 +109,45 @@ export default function CandidateDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-6 px-3 sm:py-8 sm:px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <Button variant="ghost" onClick={() => router.push("/candidates")} className="mb-4 sm:mb-6">
+        <Button variant="ghost" onClick={() => router.push("/candidates")} className="mb-6">
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Candidates
         </Button>
 
         <Card className="overflow-hidden border-0 shadow-lg">
-          <div className="relative h-48 sm:h-64 w-full">
+          <div className="relative h-64 w-full">
             <Image src={candidate.image || "/placeholder.svg"} alt={candidate.name} fill className="object-cover" />
           </div>
 
-          <CardContent className="p-4 sm:p-6">
-            <div className="mb-4 sm:mb-6">
-              <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">{candidate.name}</h1>
-              <p className="text-base sm:text-lg text-slate-500 dark:text-slate-400">{candidate.party}</p>
+          <CardContent className="p-6">
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold mb-2">{candidate.name}</h1>
+              <p className="text-lg text-slate-500 dark:text-slate-400">{candidate.party}</p>
             </div>
 
-            <div className="mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl font-semibold mb-2">About</h2>
-              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300">{candidate.fullDescription}</p>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">About</h2>
+              <p className="text-slate-600 dark:text-slate-300">{candidate.fullDescription}</p>
             </div>
 
-            <div className="mb-4 sm:mb-6">
-              <h2 className="text-lg sm:text-xl font-semibold mb-2">Key Policies</h2>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-2">Key Policies</h2>
               <ul className="list-disc pl-5 space-y-1">
                 {candidate.policies.map((policy: string, index: number) => (
-                  <li key={index} className="text-sm sm:text-base text-slate-600 dark:text-slate-300">
+                  <li key={index} className="text-slate-600 dark:text-slate-300">
                     {policy}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="flex justify-center mt-6 sm:mt-8">
+            <div className="flex justify-center mt-8">
               <Button
                 onClick={handleSelectCandidate}
-                className="px-4 py-2 sm:px-6 sm:py-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
               >
-                <Vote className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                <Vote className="mr-2 h-5 w-5" />
                 Select This Candidate
               </Button>
             </div>

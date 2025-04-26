@@ -85,31 +85,30 @@ export default function Home() {
         <div className="absolute top-1/2 -right-24 w-96 h-96 bg-blue-200 dark:bg-blue-900/20 rounded-full blur-3xl opacity-30"></div>
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-1/2 bg-gradient-to-t from-white/10 to-transparent dark:from-black/10"></div>
 
-        <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="container mx-auto px-3 py-8 sm:px-4 sm:py-12 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-block mb-6 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full">
-              <div className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full text-sm font-medium text-purple-800 dark:text-purple-200">
+            <div className="inline-block mb-4 sm:mb-6 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full">
+              <div className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full text-xs sm:text-sm font-medium text-purple-800 dark:text-purple-200">
                 Quantum-Secured Voting
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">
               Welcome to Sawty
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8">
-              Your secure, quantum-powered e-voting platform that ensures tamper-proof elections with cutting-edge
-              technology
+            <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8">
+              Your secure, quantum-powered e-voting platform
             </p>
 
-            <div className="max-w-md mx-auto mb-8">
+            <div className="max-w-md mx-auto mb-6">
               <Card className="border-0 shadow-lg bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
-                <CardContent className="pt-6">
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
+                <CardContent className="pt-4 sm:pt-6">
+                  <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                    <div className="space-y-1 sm:space-y-2">
                       <Label htmlFor="secret-id">Enter Your Secret ID</Label>
                       <div className="relative">
-                        <KeyRound className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                        <KeyRound className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                         <Input
                           id="secret-id"
                           type="text"
@@ -138,10 +137,10 @@ export default function Home() {
                     <Button
                       type="button"
                       variant="link"
-                      className="w-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
+                      className="w-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 text-xs sm:text-sm py-0"
                       onClick={handleResendSecretId}
                     >
-                      <Mail className="mr-2 h-4 w-4" />
+                      <Mail className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
                       Lost your Secret ID? Click here to resend it
                     </Button>
                   </form>
