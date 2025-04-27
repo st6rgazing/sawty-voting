@@ -7,8 +7,6 @@ const path = require("path")
 
 console.log("✅ All modules loaded")
 
-
-
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -81,7 +79,7 @@ function findSecretIdByEmail(email) {
 // --- ROUTES ---
 
 // ✅ Generate and Email Secret Links for All
-app.post("https://sawty-api.onrender.com/api/generate-for-all", async (req, res) => {
+app.post("/api/generate-for-all", async (req, res) => {
   const results = []
 
   for (const email of mailingList) {
@@ -101,17 +99,18 @@ app.post("https://sawty-api.onrender.com/api/generate-for-all", async (req, res)
       subject: "Your Sawty Voting Link",
       text: `Hello,
 
-You have been assigned a secure voting link by Sawty.
 
-Please click the link below to log in and cast your secure vote:
+Your Private ID is ${secretId}.
 
-👉 ${loginLink}
+Please click the link below to log in automatically and cast your secure vote:
+
+${loginLink}
 
 This link is encrypted for your privacy.
 Please do not share it with anyone.
 
 Thank you,
-Sawty Voting Team
+Sawty Team
 `,
     }
 
@@ -129,7 +128,7 @@ Sawty Voting Team
 })
 
 // ✅ Generate Secret for One Person
-app.post("https://sawty-api.onrender.com/api/generate-secret", async (req, res) => {
+app.post("/api/generate-secret", async (req, res) => {
   const { email } = req.body
   if (!email) return res.status(400).json({ message: "Email is required." })
 
@@ -149,20 +148,20 @@ app.post("https://sawty-api.onrender.com/api/generate-secret", async (req, res) 
     subject: "Your Sawty Voting Link",
     text: `Hello,
 
-You have been assigned a secure voting link by Sawty.
 
-Please click the link below to log in and cast your secure vote:
+Your Private ID is ${secretId}.
 
-👉 ${loginLink}
+Please click the link below to log in automatically and cast your secure vote:
+
+${loginLink}
 
 This link is encrypted for your privacy.
 Please do not share it with anyone.
 
 Thank you,
-Sawty Voting Team
+Sawty Team
 `,
   }
-
   try {
     await transporter.sendMail(mailOptions)
     console.log(`✅ Secure Voting Link sent to ${email}`)
@@ -174,14 +173,14 @@ Sawty Voting Team
 })
 
 // ✅ Submit Vote
-app.post("https://sawty-api.onrender.com/api/submit-vote ", async (req, res) => {
+app.post("/api/submit-vote", async (req, res) => {
   const { secretId, encryptedVote } = req.body
   if (!secretId || !encryptedVote) {
-    return res.status(400).json({ message: "Secret ID and vote are required." })
+    return res.status(400).json({ message: "Private ID and vote are required." })
   }
 
   if (!issuedSecrets[secretId]) {
-    return res.status(400).json({ message: "Invalid or expired Secret ID." })
+    return res.status(400).json({ message: "Invalid or expired Private ID." })
   }
 
   try {
@@ -197,13 +196,14 @@ app.post("https://sawty-api.onrender.com/api/submit-vote ", async (req, res) => 
     console.error("❌ Error saving vote to MongoDB:", err)
     // fallback save
     votes.push({ secretId, encryptedVote, timestamp: new Date().toISOString() })
+    console.log({ secretId, encryptedVote, timestamp: new Date().toISOString() })
     fs.writeFileSync(votesFile, JSON.stringify(votes, null, 2))
     res.status(500).json({ message: "Saved locally due to DB error." })
   }
 })
 
 // ✅ Verify Secret
-app.post("https://sawty-api.onrender.com/api/verify-secret", (req, res) => {
+app.post("/api/verify-secret", (req, res) => {
   const { secretId } = req.body
   if (!secretId) return res.status(400).json({ valid: false, message: "Secret ID required." })
 
@@ -215,17 +215,17 @@ app.post("https://sawty-api.onrender.com/api/verify-secret", (req, res) => {
 })
 
 // ✅ Admin View Votes
-app.get("https://sawty-api.onrender.com/api/admin/votes", async (req, res) => {
+app.get("/api/admin/votes", async (req, res) => {
   res.json(votes)
 })
 
 // ✅ Admin votes.json for Blockchain Frontend
-app.get("https://sawty-api.onrender.com/api/admin/votes.json", (req, res) => {
+app.get("/api/admin/votes.json", (req, res) => {
   res.sendFile(votesFile)
 })
 
 // ✅ Get Voters
-app.get("https://sawty-api.onrender.com/api/voters", async (req, res) => {
+app.get("/api/voters", async (req, res) => {
   try {
     const voters = await Voter.find()
 
@@ -243,7 +243,7 @@ app.get("https://sawty-api.onrender.com/api/voters", async (req, res) => {
 })
 
 // ✅ Get Voter by Secret ID
-app.get("https://sawty-api.onrender.com/api/voters/:secretId", async (req, res) => {
+app.get("/api/voters/:secretId", async (req, res) => {
   const requestedSecretId = req.params.secretId
 
   try {
@@ -252,7 +252,7 @@ app.get("https://sawty-api.onrender.com/api/voters/:secretId", async (req, res) 
     // Decrypt secretId and find the matching voter
     const matchingVoter = voters.find((voter) => {
       const decryptedSecretId = decrypt(voter.secretId)
-      return decryptedSecretId === requestedSecretId
+      return decryptedSecretId === requestedSecretIdG
     })
 
     if (!matchingVoter) {
@@ -275,7 +275,7 @@ app.get("https://sawty-api.onrender.com/api/voters/:secretId", async (req, res) 
 })
 
 // Delete a mapping (admin function)
-app.delete("https://sawty-api.onrender.com/api/admin/mappings/:secretId", (req, res) => {
+app.delete("/api/admin/mappings/:secretId", (req, res) => {
   const { secretId } = req.params
 
   if (issuedSecrets[secretId]) {
