@@ -81,7 +81,7 @@ function findSecretIdByEmail(email) {
 // --- ROUTES ---
 
 // ✅ Generate and Email Secret Links for All
-app.post("/api/generate-for-all", async (req, res) => {
+app.post("https://sawty-api.onrender.com/api/generate-for-all", async (req, res) => {
   const results = []
 
   for (const email of mailingList) {
@@ -129,7 +129,7 @@ Sawty Voting Team
 })
 
 // ✅ Generate Secret for One Person
-app.post("/api/generate-secret", async (req, res) => {
+app.post("https://sawty-api.onrender.com/api/generate-secret", async (req, res) => {
   const { email } = req.body
   if (!email) return res.status(400).json({ message: "Email is required." })
 
@@ -174,7 +174,7 @@ Sawty Voting Team
 })
 
 // ✅ Submit Vote
-app.post("/api/submit-vote ", async (req, res) => {
+app.post("https://sawty-api.onrender.com/api/submit-vote ", async (req, res) => {
   const { secretId, encryptedVote } = req.body
   if (!secretId || !encryptedVote) {
     return res.status(400).json({ message: "Secret ID and vote are required." })
@@ -203,7 +203,7 @@ app.post("/api/submit-vote ", async (req, res) => {
 })
 
 // ✅ Verify Secret
-app.post("/api/verify-secret", (req, res) => {
+app.post("https://sawty-api.onrender.com/api/verify-secret", (req, res) => {
   const { secretId } = req.body
   if (!secretId) return res.status(400).json({ valid: false, message: "Secret ID required." })
 
@@ -214,18 +214,18 @@ app.post("/api/verify-secret", (req, res) => {
   }
 })
 
-// // ✅ Admin View Votes
-// app.get("/api/admin/votes", async (req, res) => {
-//   res.json(votes)
-// })
+// ✅ Admin View Votes
+app.get("https://sawty-api.onrender.com/api/admin/votes", async (req, res) => {
+  res.json(votes)
+})
 
 // ✅ Admin votes.json for Blockchain Frontend
-app.get("/api/admin/votes.json", (req, res) => {
+app.get("https://sawty-api.onrender.com/api/admin/votes.json", (req, res) => {
   res.sendFile(votesFile)
 })
 
 // ✅ Get Voters
-app.get("/api/voters", async (req, res) => {
+app.get("https://sawty-api.onrender.com/api/voters", async (req, res) => {
   try {
     const voters = await Voter.find()
 
@@ -243,7 +243,7 @@ app.get("/api/voters", async (req, res) => {
 })
 
 // ✅ Get Voter by Secret ID
-app.get("/api/voters/:secretId", async (req, res) => {
+app.get("https://sawty-api.onrender.com/api/voters/:secretId", async (req, res) => {
   const requestedSecretId = req.params.secretId
 
   try {
@@ -275,7 +275,7 @@ app.get("/api/voters/:secretId", async (req, res) => {
 })
 
 // Delete a mapping (admin function)
-app.delete("/api/admin/mappings/:secretId", (req, res) => {
+app.delete("https://sawty-api.onrender.com/api/admin/mappings/:secretId", (req, res) => {
   const { secretId } = req.params
 
   if (issuedSecrets[secretId]) {
