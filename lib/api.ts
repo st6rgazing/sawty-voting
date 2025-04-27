@@ -66,18 +66,3 @@ export async function submitVote(secretId: string, encryptedVote: string): Promi
     return { success: false, data: { message: error.message || "Failed to submit vote" } }
   }
 }
-
-export async function generateForAll() {
-  try {
-    const res = await fetch("/api/generate-for-all", {
-      method: "POST",
-    });
-
-    const data = await res.json();
-
-    return { success: res.ok, data };
-  } catch (error) {
-    console.error("Error calling generateForAll:", error);
-    return { success: false, data: { message: "Network error" } };
-  }
-}

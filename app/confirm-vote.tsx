@@ -34,16 +34,9 @@ export default function ConfirmVotePage() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
-
-    let value: string | null = null;
-
-if (typeof window !== "undefined") {
-  const storedSecretId = localStorage.getItem("secretId")
-  const selectedCandidateId = localStorage.getItem("selectedCandidate")
-}
-
     // Check if user is authenticated and has selected a candidate
-
+    const storedSecretId = localStorage.getItem("secretId")
+    const selectedCandidateId = localStorage.getItem("selectedCandidate")
 
     if (!storedSecretId) {
       router.push("/")

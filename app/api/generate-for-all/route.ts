@@ -1,40 +1,44 @@
 import { NextResponse } from "next/server"
-import crypto from "crypto"
+import { connectToDatabase } from "@/lib/mongodb"
+import { issuedSecrets } from "@/lib/store"
 import { encrypt } from "@/lib/encryption"
 import { sendEmail } from "@/lib/email"
-import { Redis } from '@upstash/redis';
-
-// Initialize Redis from env vars
-const redis = Redis.fromEnv();
+import crypto from "crypto"
 
 export async function POST(request: Request) {
   try {
+    // Get the mailing list from environment variable or database
     const mailingList = process.env.MAILING_LIST
       ? process.env.MAILING_LIST.split(",")
       : ["mariamshafey3@gmail.com", "deahmedbacha@gmail.com"] // Default list
 
-    const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app/"
-
     const results = []
 
     for (const email of mailingList) {
-      // Check if there's already a secret ID stored in Redis
-      let secretId = await redis.get<string>(`email:${email}`)
+      // Check if there's already a secret ID for this email
+      let secretId = findSecretIdByEmail(email)
 
       if (!secretId) {
-        // If not found, generate a new one
+        // Generate a new secret ID
         secretId = crypto.randomBytes(4).toString("hex")
+        issuedSecrets[secretId] = email
 
-        // Save the secretId -> email mapping
-        await redis.set(`email:${email}`, secretId)
-        await redis.set(`secret:${secretId}`, email)
+        // Store in database for persistence
+        try {
+          const { db } = await connectToDatabase()
+          await db.collection("voters").updateOne({ email }, { $set: { secretId } }, { upsert: true })
+        } catch (dbError) {
+          console.error(`Error storing secret ID for ${email} in database:`, dbError)
+          // Continue anyway since we have it in memory
+        }
       }
 
-      // Encrypt the secret ID for URL
+      // Encrypt the secret ID for the URL
       const encryptedSecretId = encrypt(secretId)
+      const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app/"
       const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSecretId)}`
 
-      // Send email
+      // Send email with the login link
       try {
         await sendEmail({
           to: email,
@@ -70,4 +74,14 @@ Sawty Voting Team`,
     console.error("Error generating secrets for all:", error)
     return NextResponse.json({ message: "Server error. Please try again later." }, { status: 500 })
   }
+}
+
+// Helper function to find a secret ID by email
+function findSecretIdByEmail(email: string) {
+  for (const [secretId, mappedEmail] of Object.entries(issuedSecrets)) {
+    if (mappedEmail === email) {
+      return secretId
+    }
+  }
+  return null
 }

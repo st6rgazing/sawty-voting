@@ -7,6 +7,8 @@ const path = require("path")
 
 console.log("✅ All modules loaded")
 
+
+
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -99,18 +101,17 @@ app.post("/api/generate-for-all", async (req, res) => {
       subject: "Your Sawty Voting Link",
       text: `Hello,
 
+You have been assigned a secure voting link by Sawty.
 
-Your Private ID is ${secretId}.
+Please click the link below to log in and cast your secure vote:
 
-Please click the link below to log in automatically and cast your secure vote:
-
-${loginLink}
+👉 ${loginLink}
 
 This link is encrypted for your privacy.
 Please do not share it with anyone.
 
 Thank you,
-Sawty Team
+Sawty Voting Team
 `,
     }
 
@@ -148,20 +149,20 @@ app.post("/api/generate-secret", async (req, res) => {
     subject: "Your Sawty Voting Link",
     text: `Hello,
 
+You have been assigned a secure voting link by Sawty.
 
-Your Private ID is ${secretId}.
+Please click the link below to log in and cast your secure vote:
 
-Please click the link below to log in automatically and cast your secure vote:
-
-${loginLink}
+👉 ${loginLink}
 
 This link is encrypted for your privacy.
 Please do not share it with anyone.
 
 Thank you,
-Sawty Team
+Sawty Voting Team
 `,
   }
+
   try {
     await transporter.sendMail(mailOptions)
     console.log(`✅ Secure Voting Link sent to ${email}`)
@@ -176,11 +177,11 @@ Sawty Team
 app.post("/api/submit-vote", async (req, res) => {
   const { secretId, encryptedVote } = req.body
   if (!secretId || !encryptedVote) {
-    return res.status(400).json({ message: "Private ID and vote are required." })
+    return res.status(400).json({ message: "Secret ID and vote are required." })
   }
 
   if (!issuedSecrets[secretId]) {
-    return res.status(400).json({ message: "Invalid or expired Private ID." })
+    return res.status(400).json({ message: "Invalid or expired Secret ID." })
   }
 
   try {
@@ -196,7 +197,6 @@ app.post("/api/submit-vote", async (req, res) => {
     console.error("❌ Error saving vote to MongoDB:", err)
     // fallback save
     votes.push({ secretId, encryptedVote, timestamp: new Date().toISOString() })
-    console.log({ secretId, encryptedVote, timestamp: new Date().toISOString() })
     fs.writeFileSync(votesFile, JSON.stringify(votes, null, 2))
     res.status(500).json({ message: "Saved locally due to DB error." })
   }
@@ -252,7 +252,7 @@ app.get("/api/voters/:secretId", async (req, res) => {
     // Decrypt secretId and find the matching voter
     const matchingVoter = voters.find((voter) => {
       const decryptedSecretId = decrypt(voter.secretId)
-      return decryptedSecretId === requestedSecretIdG
+      return decryptedSecretId === requestedSecretId
     })
 
     if (!matchingVoter) {
