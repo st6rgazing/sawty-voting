@@ -53,3 +53,72 @@ export async function addSecret(secretId: string, email: string) {
     throw error;
   }
 }
+
+// Get all votes 
+export async function getAllVotes() {
+  try {
+    // First try direct keys method for Upstash Redis
+    const voteKeys = await getVoteKeys();
+    const votes = [];
+    
+    // Get values for each key
+    for (const key of voteKeys) {
+      try {
+        const voteData = await getKV(key);
+        if (voteData) {
+          // Parse the JSON data if it's stored as a string
+          if (typeof voteData === 'string') {
+            votes.push(JSON.parse(voteData));
+          } else {
+            votes.push(voteData);
+          }
+        }
+      } catch (error) {
+        console.error(`Error getting vote for key ${key}:`, error);
+      }
+    }
+    
+    return votes;
+  } catch (error) {
+    console.error('Error getting all votes:', error);
+    return [];
+  }
+}
+
+// Helper function to get all vote keys
+async function getVoteKeys() {
+  try {
+    // Try direct 'keys' method for Upstash Redis 
+    // (This is available in Upstash Redis but not in all Redis implementations)
+    const redis = await import('@/lib/kv-storage').then(m => m.redis);
+    return await redis.keys('vote:*');
+  } catch (error) {
+    console.error('Error getting vote keys, falling back to prefix scan:', error);
+    return fallbackGetVoteKeys();
+  }
+}
+
+// Fallback method to get vote keys using scan
+async function fallbackGetVoteKeys() {
+  const keys = [];
+  let cursor = 0;
+  const redis = await import('@/lib/kv-storage').then(m => m.redis);
+  
+  do {
+    try {
+      // For Upstash Redis, scan returns [nextCursor, keysArray]
+      const result = await redis.scan(cursor, { match: 'vote:*', count: 100 });
+      
+      // Update cursor - first element is the next cursor
+      cursor = parseInt(result[0]);
+      
+      // Add keys - second element is the array of keys
+      keys.push(...result[1]);
+    } catch (error) {
+      console.error('Error in scan operation:', error);
+      break; // Exit the loop on error
+    }
+  } while (cursor !== 0);
+  
+  return keys;
+}

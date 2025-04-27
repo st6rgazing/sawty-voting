@@ -1,12 +1,28 @@
 import { NextResponse } from "next/server"
 import { getAllVotes } from "@/lib/store"
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
+    // Get all votes
     const votes = await getAllVotes()
-    return NextResponse.json(votes)
+    
+    return NextResponse.json({ 
+      success: true, 
+      votes,
+      count: votes.length
+    })
   } catch (error) {
-    console.error("Error getting votes:", error)
-    return NextResponse.json({ message: "Server error. Please try again later." }, { status: 500 })
+    console.error("Error fetching votes:", error)
+    
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    
+    return NextResponse.json(
+      { 
+        success: false,
+        message: "Failed to fetch votes",
+        error: errorMessage
+      }, 
+      { status: 500 }
+    )
   }
 }

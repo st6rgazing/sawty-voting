@@ -19,12 +19,15 @@ export default function VotesPage() {
   const [votes, setVotes] = useState<Vote[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [debugInfo, setDebugInfo] = useState<any>(null)
 
   const fetchVotes = async () => {
     setLoading(true)
     setError("")
+    setDebugInfo(null)
 
     try {
+      console.log("Fetching votes...")
       const response = await fetch("/api/votes")
 
       if (!response.ok) {
@@ -32,9 +35,20 @@ export default function VotesPage() {
       }
 
       const data = await response.json()
+      console.log("Votes API response:", data)
+      setDebugInfo(data)
+
+      // The API now returns a success field and votes array
+      if (!data.success) {
+        throw new Error(data.message || "Failed to fetch votes")
+      }
+
+      if (!data.votes || !Array.isArray(data.votes)) {
+        throw new Error("Invalid response format - votes array missing")
+      }
 
       // Try to decode the votes for display
-      const processedVotes = data.map((vote: Vote) => {
+      const processedVotes = data.votes.map((vote: Vote) => {
         try {
           const decodedString = atob(vote.encryptedVote)
           const decodedVote = JSON.parse(decodedString)
@@ -46,6 +60,7 @@ export default function VotesPage() {
 
       setVotes(processedVotes)
     } catch (err) {
+      console.error("Error fetching votes:", err)
       setError(`Error: ${err instanceof Error ? err.message : String(err)}`)
     } finally {
       setLoading(false)
@@ -75,7 +90,20 @@ export default function VotesPage() {
         </Button>
       </div>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">{error}</div>}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+          <p className="font-bold">Error:</p>
+          <p>{error}</p>
+          {debugInfo && (
+            <details className="mt-2">
+              <summary className="cursor-pointer">Debug Info</summary>
+              <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-x-auto">
+                {JSON.stringify(debugInfo, null, 2)}
+              </pre>
+            </details>
+          )}
+        </div>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
         <Card>
