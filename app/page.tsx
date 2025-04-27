@@ -89,16 +89,16 @@ export default function Home() {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-block mb-4 sm:mb-6 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full">
               <div className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full text-xs sm:text-sm font-medium text-purple-800 dark:text-purple-200">
-                Quantum-Secured Voting
+                Secure Anonymous Voting
               </div>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">
-              Welcome to Sawty
+              Welcome to Sawty Voting
             </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8">
-              Your secure, quantum-powered e-voting platform
+              Your secure, transparent, and privacy-preserving voting platform
             </p>
 
             <div className="max-w-md mx-auto mb-6">
