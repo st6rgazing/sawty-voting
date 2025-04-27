@@ -13,33 +13,21 @@ import { Info, ArrowRight } from "lucide-react"
 const candidates = [
   {
     id: "1",
-<<<<<<< HEAD
-    name: "Alex Johnson",
-    party: "Progressive Party",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Committed to environmental sustainability and social justice.",
-=======
+
     name: "Team 6",
     party: "Web Development",
     image: "/images/team6-member1.png",
     shortDescription: "Building innovative web solutions with modern frameworks.",
->>>>>>> 745728c3dfd3d489721994d3823fe2837f9ae39a
     fullDescription:
       "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
   },
   {
     id: "2",
-<<<<<<< HEAD
-    name: "Sam Rivera",
-    party: "Liberty Alliance",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Advocating for economic growth and individual freedoms.",
-=======
+
     name: "Also Team 6",
     party: "Quantum Computing",
     image: "/images/team6-member2.png",
     shortDescription: "Creating intelligent solutions with advanced algorithms.",
->>>>>>> 745728c3dfd3d489721994d3823fe2837f9ae39a
     fullDescription:
       "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
   },
