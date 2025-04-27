@@ -13,7 +13,7 @@ const candidates = [
     id: "1",
     name: "Team 6",
     party: "Web Development",
-    image: "/images/team6-member1.svg",
+    image: "/images/team6-member1.png",
     shortDescription: "Building innovative web solutions with modern frameworks.",
     fullDescription:
       "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
@@ -29,7 +29,7 @@ const candidates = [
     id: "2",
     name: "Also Team 6",
     party: "AI & Machine Learning",
-    image: "/images/team6-member2.svg",
+    image: "/images/team6-member2.png",
     shortDescription: "Creating intelligent solutions with advanced algorithms.",
     fullDescription:
       "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
@@ -45,7 +45,7 @@ const candidates = [
     id: "3",
     name: "Absolutely Team 6",
     party: "Blockchain Technology",
-    image: "/images/team6-member3.svg",
+    image: "/images/team6-member3.png",
     shortDescription: "Exploring decentralized solutions for secure voting systems.",
     fullDescription:
       "Absolutely Team 6 has pioneered blockchain applications for secure and transparent systems. Their expertise spans across smart contract development, decentralized applications, and cryptographic techniques to ensure data integrity and privacy in digital voting platforms.",
@@ -61,7 +61,7 @@ const candidates = [
     id: "4",
     name: "Morgan Lee",
     party: "Future Forward",
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     shortDescription: "Embracing technology and innovation to solve tomorrow's challenges.",
     fullDescription:
       "Morgan Lee is a tech entrepreneur and policy innovator who believes in harnessing the power of technology to address society's most pressing challenges. Morgan advocates for investment in education, research, and digital infrastructure to prepare citizens for the jobs of the future.",
@@ -117,7 +117,7 @@ export default function CandidateDetailPage() {
 
         <Card className="overflow-hidden border-0 shadow-lg">
           <div className="relative h-64 w-full">
-            <Image src={candidate.image || "/placeholder.svg"} alt={candidate.name} fill className="object-cover" />
+            <Image src={candidate.image || "/placeholder.png"} alt={candidate.name} fill className="object-cover" />
           </div>
 
           <CardContent className="p-6">

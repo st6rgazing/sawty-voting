@@ -14,14 +14,20 @@ const candidates = [
   {
     id: "1",
     name: "Team 6",
-    party: "Progressive Party",
-    image: "/placeholder.svg?height=300&width=300",
+    party: "Transparency Party",
+    image: "/team6-member1.png?height=300&width=300",
   },
   {
     id: "2",
     name: "Also team 6",
-    party: "Liberty Alliance",
-    image: "/placeholder.svg?height=300&width=300",
+    party: "No corruption Party",
+    image: "/team6-member2.png?height=300&width=300",
+  },
+  {
+    id: "3",
+    name: "Absolutely team 6",
+    party: "No corruption Party",
+    image: "/team6-member.png?height=300&width=300",
   },
 ]
 
