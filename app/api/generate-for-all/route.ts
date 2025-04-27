@@ -1,61 +1,40 @@
 import { NextResponse } from "next/server"
-import { connectToDatabase } from "@/lib/mongodb"
-import { issuedSecrets } from "@/lib/store"
+import crypto from "crypto"
 import { encrypt } from "@/lib/encryption"
 import { sendEmail } from "@/lib/email"
-import crypto from "crypto"
 import { Redis } from '@upstash/redis';
-import { NextResponse } from 'next/server';
 
 // Initialize Redis from env vars
 const redis = Redis.fromEnv();
 
-// Handle POST request
-export async function POST(request) {
-  // Set an item
-  await redis.set("test-key", "Hello from Redis!");
-
-  // Get the item
-  const value = await redis.get("test-key");
-
-  return NextResponse.json({ value });
-}
-
-
 export async function POST(request: Request) {
   try {
-    // Get the mailing list from environment variable or database
     const mailingList = process.env.MAILING_LIST
       ? process.env.MAILING_LIST.split(",")
       : ["mariamshafey3@gmail.com", "deahmedbacha@gmail.com"] // Default list
 
+    const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app/"
+
     const results = []
 
     for (const email of mailingList) {
-      // Check if there's already a secret ID for this email
-      let secretId = findSecretIdByEmail(email)
+      // Check if there's already a secret ID stored in Redis
+      let secretId = await redis.get<string>(`email:${email}`)
 
       if (!secretId) {
-        // Generate a new secret ID
+        // If not found, generate a new one
         secretId = crypto.randomBytes(4).toString("hex")
-        issuedSecrets[secretId] = email
 
-        // Store in database for persistence
-        try {
-          const { db } = await connectToDatabase()
-          await db.collection("voters").updateOne({ email }, { $set: { secretId } }, { upsert: true })
-        } catch (dbError) {
-          console.error(`Error storing secret ID for ${email} in database:`, dbError)
-          // Continue anyway since we have it in memory
-        }
+        // Save the secretId -> email mapping
+        await redis.set(`email:${email}`, secretId)
+        await redis.set(`secret:${secretId}`, email)
       }
 
-      // Encrypt the secret ID for the URL
+      // Encrypt the secret ID for URL
       const encryptedSecretId = encrypt(secretId)
-      const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app/"
       const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSecretId)}`
 
-      // Send email with the login link
+      // Send email
       try {
         await sendEmail({
           to: email,
@@ -91,14 +70,4 @@ Sawty Voting Team`,
     console.error("Error generating secrets for all:", error)
     return NextResponse.json({ message: "Server error. Please try again later." }, { status: 500 })
   }
-}
-
-// Helper function to find a secret ID by email
-function findSecretIdByEmail(email: string) {
-  for (const [secretId, mappedEmail] of Object.entries(issuedSecrets)) {
-    if (mappedEmail === email) {
-      return secretId
-    }
-  }
-  return null
 }

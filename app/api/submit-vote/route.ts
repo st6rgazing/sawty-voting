@@ -1,22 +1,5 @@
 import { NextResponse } from "next/server"
 import { isSecretValid, removeSecret, addVote } from "@/lib/store"
-import { Redis } from '@upstash/redis';
-import { NextResponse } from 'next/server';
-
-// Initialize Redis from env vars
-const redis = Redis.fromEnv();
-
-// Handle POST request
-export async function POST(request) {
-  // Set an item
-  await redis.set("test-key", "Hello from Redis!");
-
-  // Get the item
-  const value = await redis.get("test-key");
-
-  return NextResponse.json({ value });
-}
-
 
 export async function POST(request: Request) {
   try {
@@ -46,7 +29,6 @@ export async function POST(request: Request) {
     } catch (error) {
       console.error("Error saving vote:", error)
 
-      // More detailed error for debugging
       const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error)
 
       return NextResponse.json(
@@ -60,7 +42,6 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error submitting vote:", error)
 
-    // More detailed error for debugging
     const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error)
 
     return NextResponse.json(

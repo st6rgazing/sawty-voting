@@ -3,23 +3,6 @@ import crypto from "crypto"
 import nodemailer from "nodemailer"
 import { findSecretIdByEmail, addSecret } from "@/lib/store"
 import { encrypt } from "@/lib/encryption"
-import { Redis } from '@upstash/redis';
-import { NextResponse } from 'next/server';
-
-// Initialize Redis from env vars
-const redis = Redis.fromEnv();
-
-// Handle POST request
-export async function POST(request) {
-  // Set an item
-  await redis.set("test-key", "Hello from Redis!");
-
-  // Get the item
-  const value = await redis.get("test-key");
-
-  return NextResponse.json({ value });
-}
-
 
 // Email configuration
 const transporter = nodemailer.createTransport({
@@ -42,7 +25,7 @@ export async function POST(request: Request) {
     }
 
     // Check if a secret already exists for this email
-    let secretId = findSecretIdByEmail(email)
+    let secretId = await findSecretIdByEmail(email)
 
     // If not, generate a new one
     if (!secretId) {
