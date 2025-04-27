@@ -65,15 +65,15 @@
     "@mongodb-js/zstd": "latest",
     "mongodb-client-encryption": "latest",
     "@aws-sdk/credential-providers": "latest",
+    "express": "latest",
+    "crypto": "latest",
+    "nodemailer": "latest",
+    "cors": "latest",
     "fs": "latest",
     "path": "latest",
-    "crypto": "latest",
-    "mongodb": "latest",
-    "nodemailer": "latest",
-    "express": "latest",
-    "cors": "latest",
     "mongoose": "latest",
-    "xlsx": "latest"
+    "xlsx": "latest",
+    "mongodb": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

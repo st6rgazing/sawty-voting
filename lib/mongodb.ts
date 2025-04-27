@@ -13,28 +13,25 @@ if (!MONGODB_DB) {
   throw new Error("Please define the MONGODB_DB environment variable")
 }
 
-let cachedClient = null
-let cachedDb = null
+let cachedClient: MongoClient | null = null
+let cachedDb: any = null
 
 export async function connectToDatabase() {
-  // If the connection is already established, return the cached connection
+  // If we have a cached connection, use it
   if (cachedClient && cachedDb) {
     return { client: cachedClient, db: cachedDb }
   }
 
-  // Set the connection options
-  const opts = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+  // Create a new MongoDB client
+  const client = new MongoClient(MONGODB_URI)
 
-  // Connect to the MongoDB server
-  const client = await MongoClient.connect(MONGODB_URI, opts)
+  // Connect to the client
+  await client.connect()
 
   // Get the database
   const db = client.db(MONGODB_DB)
 
-  // Cache the client and db connections
+  // Cache the client and db connection
   cachedClient = client
   cachedDb = db
 
