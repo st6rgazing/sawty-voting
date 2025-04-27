@@ -15,19 +15,19 @@ const candidates = [
     id: "1",
     name: "Team 6",
     party: "Transparency Party",
-    image: "/team6-member1.png?height=300&width=300",
+    image: "/images/team6-member1.png?height=300&width=300",
   },
   {
     id: "2",
     name: "Also team 6",
     party: "No corruption Party",
-    image: "/team6-member2.png?height=300&width=300",
+    image: "/images/team6-member2.png?height=300&width=300",
   },
   {
     id: "3",
     name: "Absolutely team 6",
     party: "No corruption Party",
-    image: "/team6-member.png?height=300&width=300",
+    image: "/images/team6-member.png?height=300&width=300",
   },
 ]
 
@@ -40,29 +40,27 @@ export default function ConfirmVotePage() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
-
-    let value: string | null = null;
-
-if (typeof window !== "undefined") {
-  const storedSecretId = localStorage.getItem("secretId")
-  const selectedCandidateId = localStorage.getItem("selectedCandidate")
-}
-
+    let storedSecretId: string | null = null
+    let selectedCandidateId: string | null = null
+  
+    if (typeof window !== "undefined") {
+      storedSecretId = localStorage.getItem("secretId")
+      selectedCandidateId = localStorage.getItem("selectedCandidate")
+    }
+  
     // Check if user is authenticated and has selected a candidate
-
-
     if (!storedSecretId) {
       router.push("/")
       return
     }
-
+  
     if (!selectedCandidateId) {
       router.push("/candidates")
       return
     }
-
+  
     setSecretId(storedSecretId)
-
+  
     // Find the candidate based on the stored ID
     const foundCandidate = candidates.find((c) => c.id === selectedCandidateId)
     if (foundCandidate) {
