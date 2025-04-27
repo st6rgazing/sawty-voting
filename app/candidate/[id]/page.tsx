@@ -11,57 +11,57 @@ import { ArrowLeft, Vote } from "lucide-react"
 const candidates = [
   {
     id: "1",
-    name: "Alex Johnson",
-    party: "Progressive Party",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Committed to environmental sustainability and social justice.",
+    name: "Team 6",
+    party: "Web Development",
+    image: "/images/team6-member1.png",
+    shortDescription: "Building innovative web solutions with modern frameworks.",
     fullDescription:
-      "Alex Johnson has been a community organizer for over 15 years, focusing on environmental sustainability initiatives and social justice reforms. With a background in environmental law, Alex has successfully advocated for cleaner energy policies and community-based solutions to climate change.",
+      "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
     policies: [
-      "Transition to 100% renewable energy by 2035",
-      "Universal healthcare coverage",
-      "Increase minimum wage to $15/hour",
-      "Reform criminal justice system",
-      "Expand affordable housing programs",
+      "Server-side rendering for optimal performance",
+      "Responsive design for all device sizes",
+      "Accessibility compliance (WCAG 2.1)",
+      "Modern state management with React hooks",
+      "Progressive Web App capabilities",
     ],
   },
   {
     id: "2",
-    name: "Sam Rivera",
-    party: "Liberty Alliance",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Advocating for economic growth and individual freedoms.",
+    name: "Also Team 6",
+    party: "AI & Machine Learning",
+    image: "/images/team6-member2.png",
+    shortDescription: "Creating intelligent solutions with advanced algorithms.",
     fullDescription:
-      "Sam Rivera is a business leader with a strong track record of creating jobs and stimulating economic growth. Sam believes in reducing regulations that hamper small businesses and advocates for policies that empower individuals to achieve their full potential.",
+      "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
     policies: [
-      "Reduce corporate tax rates to stimulate growth",
-      "Simplify the tax code for individuals",
-      "Deregulate key industries",
-      "Expand school choice programs",
-      "Strengthen border security",
+      "Natural Language Processing for user queries",
+      "Computer vision for identity verification",
+      "Predictive analytics for user behavior",
+      "Sentiment analysis for feedback processing",
+      "Real-time data processing pipelines",
     ],
   },
   {
     id: "3",
-    name: "Jordan Taylor",
-    party: "Unity Coalition",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Building bridges across political divides for common progress.",
+    name: "Absolutely Team 6",
+    party: "Blockchain Technology",
+    image: "/images/team6-member3.png",
+    shortDescription: "Exploring decentralized solutions for secure voting systems.",
     fullDescription:
-      "Jordan Taylor has served as a mediator in various political contexts, bringing opposing sides together to find common ground. With experience in both the public and private sectors, Jordan focuses on practical solutions that can gain support across the political spectrum.",
+      "Absolutely Team 6 has pioneered blockchain applications for secure and transparent systems. Their expertise spans across smart contract development, decentralized applications, and cryptographic techniques to ensure data integrity and privacy in digital voting platforms.",
     policies: [
-      "Bipartisan infrastructure investment plan",
-      "Balanced approach to climate change",
-      "Comprehensive immigration reform",
-      "Public-private partnerships for healthcare",
-      "Education reform with input from all stakeholders",
+      "Immutable blockchain voting records",
+      "Zero-knowledge proof verification",
+      "Decentralized identity management",
+      "Transparent audit trails",
+      "Smart contract-based automation",
     ],
   },
   {
     id: "4",
     name: "Morgan Lee",
     party: "Future Forward",
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     shortDescription: "Embracing technology and innovation to solve tomorrow's challenges.",
     fullDescription:
       "Morgan Lee is a tech entrepreneur and policy innovator who believes in harnessing the power of technology to address society's most pressing challenges. Morgan advocates for investment in education, research, and digital infrastructure to prepare citizens for the jobs of the future.",
@@ -117,7 +117,7 @@ export default function CandidateDetailPage() {
 
         <Card className="overflow-hidden border-0 shadow-lg">
           <div className="relative h-64 w-full">
-            <Image src={candidate.image || "/placeholder.svg"} alt={candidate.name} fill className="object-cover" />
+            <Image src={candidate.image || "/placeholder.png"} alt={candidate.name} fill className="object-cover" />
           </div>
 
           <CardContent className="p-6">

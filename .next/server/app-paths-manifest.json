@@ -1,1 +1,4 @@
-{}
+{
+  "/api/submit-vote/route": "app/api/submit-vote/route.js",
+  "/api/debug-add-secret/route": "app/api/debug-add-secret/route.js"
+}

@@ -1,11 +1,11 @@
-export async function verifySecretId(secretId: string): Promise<{ success: boolean; data: any }> {
+export async function verifyDigitalSignature(digitalSignature: string): Promise<{ success: boolean; data: any }> {
   try {
     const response = await fetch("/api/verify-secret", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ secretId }),
+      body: JSON.stringify({ secretId: digitalSignature }),
     })
 
     const data = await response.json()
@@ -16,12 +16,12 @@ export async function verifySecretId(secretId: string): Promise<{ success: boole
 
     return { success: true, data }
   } catch (error: any) {
-    console.error("Error verifying secret ID:", error)
-    return { success: false, data: { message: error.message || "Failed to verify secret ID" } }
+    console.error("Error verifying digital signature:", error)
+    return { success: false, data: { message: error.message || "Failed to verify digital signature" } }
   }
 }
 
-export async function requestSecretId(email: string): Promise<{ success: boolean; data: any }> {
+export async function requestDigitalSignature(email: string): Promise<{ success: boolean; data: any }> {
   try {
     const response = await fetch("/api/generate-secret", {
       method: "POST",
@@ -39,19 +39,19 @@ export async function requestSecretId(email: string): Promise<{ success: boolean
 
     return { success: true, data }
   } catch (error: any) {
-    console.error("Error requesting secret ID:", error)
-    return { success: false, data: { message: error.message || "Failed to request secret ID" } }
+    console.error("Error requesting digital signature:", error)
+    return { success: false, data: { message: error.message || "Failed to request digital signature" } }
   }
 }
 
-export async function submitVote(secretId: string, encryptedVote: string): Promise<{ success: boolean; data: any }> {
+export async function submitVote(digitalSignature: string, encryptedVote: string): Promise<{ success: boolean; data: any }> {
   try {
     const response = await fetch("/api/submit-vote", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ secretId, encryptedVote }),
+      body: JSON.stringify({ secretId: digitalSignature, encryptedVote }),
     })
 
     const data = await response.json()
@@ -66,3 +66,22 @@ export async function submitVote(secretId: string, encryptedVote: string): Promi
     return { success: false, data: { message: error.message || "Failed to submit vote" } }
   }
 }
+
+export async function generateForAll() {
+  try {
+    const res = await fetch("/api/generate-for-all", {
+      method: "POST",
+    });
+
+    const data = await res.json();
+
+    return { success: res.ok, data };
+  } catch (error) {
+    console.error("Error calling generateForAll:", error);
+    return { success: false, data: { message: "Network error" } };
+  }
+}
+
+// Aliases for backward compatibility
+export const verifySecretId = verifyDigitalSignature;
+export const requestSecretId = requestDigitalSignature;

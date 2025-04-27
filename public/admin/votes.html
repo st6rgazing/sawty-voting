@@ -135,6 +135,12 @@
         
         <div id="loading" class="loading">Loading blockchain data...</div>
         <div id="blockchain" class="blockchain"></div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/api/admin/votes.json" target="_blank" style="color: #4caf50; text-decoration: underline;">
+                View Raw JSON Data
+            </a>
+        </div>
     </div>
 
     <script>
@@ -157,65 +163,84 @@
 
         // Fetch votes and display as blockchain
         async function fetchVotes() {
-    document.getElementById('loading').style.display = 'block';
-    document.getElementById('blockchain').innerHTML = '';
-
-    try {
-        const response = await fetch('https://sawty-api.onrender.com/api/admin/votes');
-        const votes = await response.json();
-
-        document.getElementById('loading').style.display = 'none';
-
-        if (votes.length === 0) {
-            document.getElementById('blockchain').innerHTML = '<p>No votes recorded yet.</p>';
-            return;
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('blockchain').innerHTML = '';
+            
+            try {
+                // Add a cache-busting parameter to avoid browser caching
+                const response = await fetch('/api/admin/votes?t=' + new Date().getTime());
+                
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+                }
+                
+                const votes = await response.json();
+                console.log("Fetched votes:", votes); // Debug log
+                
+                document.getElementById('loading').style.display = 'none';
+                
+                if (!Array.isArray(votes)) {
+                    document.getElementById('blockchain').innerHTML = '<p>Error: Server returned invalid data format.</p>';
+                    return;
+                }
+                
+                if (votes.length === 0) {
+                    document.getElementById('blockchain').innerHTML = '<p>No votes recorded yet.</p>';
+                    return;
+                }
+                
+                // Update stats
+                document.getElementById('total-votes').textContent = votes.length;
+                document.getElementById('last-vote').textContent = 
+                    votes.length > 0 ? new Date(votes[votes.length-1].timestamp).toLocaleDateString() : '-';
+                document.getElementById('chain-health').textContent = 'Valid';
+                
+                // Genesis block
+                let prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
+                
+                // Create blockchain visualization
+                const blockchainDiv = document.getElementById('blockchain');
+                
+                votes.forEach((vote, index) => {
+                    // Create current block hash
+                    const blockData = JSON.stringify(vote);
+                    const currentHash = hashString(prevHash + blockData + vote.timestamp);
+                    
+                    const blockDiv = document.createElement('div');
+                    blockDiv.className = 'block';
+                    blockDiv.innerHTML = `
+                        <div class="block-header">
+                            <span>Block #${index + 1}</span>
+                            <span class="timestamp">${formatDate(vote.timestamp)}</span>
+                        </div>
+                        <div>
+                            <strong>Hash:</strong> 
+                            <span class="block-hash">${currentHash}</span>
+                        </div>
+                        <div>
+                            <strong>Previous Hash:</strong> 
+                            <span class="prev-hash">${prevHash}</span>
+                        </div>
+                        <div class="vote-data">
+                            <strong>Vote Data:</strong><br>
+                            Secret ID: ${vote.secretId}<br>
+                            Encrypted Vote: ${vote.encryptedVote}
+                        </div>
+                    `;
+                    
+                    blockchainDiv.appendChild(blockDiv);
+                    prevHash = currentHash;
+                });
+                
+            } catch (error) {
+                console.error('Error fetching votes:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('blockchain').innerHTML = `
+                    <p>Error loading blockchain data: ${error.message}</p>
+                    <p>Please check the console for more details and try again.</p>
+                `;
+            }
         }
-
-        document.getElementById('total-votes').textContent = votes.length;
-        document.getElementById('last-vote').textContent = 
-            votes.length > 0 ? new Date(votes[votes.length-1].timestamp).toLocaleDateString() : '-';
-        document.getElementById('chain-health').textContent = 'Valid';
-
-        let prevHash = '0000000000000000000000000000000000000000000000000000000000000000';
-        const blockchainDiv = document.getElementById('blockchain');
-
-        votes.forEach((vote, index) => {
-            const blockData = JSON.stringify(vote);
-            const currentHash = hashString(prevHash + blockData + vote.timestamp);
-
-            const blockDiv = document.createElement('div');
-            blockDiv.className = 'block';
-            blockDiv.innerHTML = `
-                <div class="block-header">
-                    <span>Block #${index + 1}</span>
-                    <span class="timestamp">${formatDate(vote.timestamp)}</span>
-                </div>
-                <div>
-                    <strong>Hash:</strong> 
-                    <span class="block-hash">${currentHash}</span>
-                </div>
-                <div>
-                    <strong>Previous Hash:</strong> 
-                    <span class="prev-hash">${prevHash}</span>
-                </div>
-                <div class="vote-data">
-                    <strong>Vote Data:</strong><br>
-                    Secret ID: ${vote.secretId}<br>
-                    Encrypted Vote: ${vote.encryptedVote}
-                </div>
-            `;
-
-            blockchainDiv.appendChild(blockDiv);
-            prevHash = currentHash;
-        });
-
-    } catch (error) {
-        console.error('Error fetching votes:', error);
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('blockchain').innerHTML = '<p>Error loading blockchain data. Please try again.</p>';
-    }
-}
-
         
         // Load votes on page load
         window.onload = fetchVotes;

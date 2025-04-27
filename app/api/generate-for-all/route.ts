@@ -1,49 +1,99 @@
 import { NextResponse } from "next/server"
-import { connectToDatabase } from "@/lib/mongodb"
-import { issuedSecrets } from "@/lib/store"
+import crypto from "crypto"
 import { encrypt } from "@/lib/encryption"
 import { sendEmail } from "@/lib/email"
-import crypto from "crypto"
+import { Redis } from '@upstash/redis';
+
+// Initialize Redis with better error handling
+let redis: Redis;
+
+try {
+  // Initialize Redis from env vars
+  redis = Redis.fromEnv();
+  console.log("Redis initialized successfully for generate-for-all API");
+} catch (error) {
+  console.error("Failed to initialize Redis:", error);
+  // Create a dummy redis instance to prevent crashes
+  redis = {
+    get: async (key: string) => { 
+      console.log(`[Mock Redis] GET ${key}`);
+      return null;
+    },
+    set: async (key: string, value: string) => {
+      console.log(`[Mock Redis] SET ${key} = ${value}`);
+      return "OK";
+    }
+  } as any;
+  console.warn("Using mock Redis instance due to initialization failure");
+}
 
 export async function POST(request: Request) {
   try {
-    // Get the mailing list from environment variable or database
+    // Check that we have the necessary environment variables
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error("Email credentials missing! EMAIL_USER or EMAIL_PASS not set.");
+      return NextResponse.json({ 
+        message: "Server configuration error. Email credentials not configured.",
+        error: "Missing email credentials"
+      }, { status: 500 });
+    }
+
+    console.log("Starting generate-for-all process...");
+    
+    // Get the mailing list from environment variables
     const mailingList = process.env.MAILING_LIST
-      ? process.env.MAILING_LIST.split(",")
+      ? process.env.MAILING_LIST.split(",").map(email => email.trim())
       : ["mariamshafey3@gmail.com", "deahmedbacha@gmail.com"] // Default list
+    
+    console.log(`Mailing list loaded with ${mailingList.length} recipients`);
+
+    // Get the frontend URL from environment variables or use default
+    const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app"
+    console.log(`Using frontend base URL: ${frontendBaseURL}`);
 
     const results = []
 
+    // Process each email in the mailing list
     for (const email of mailingList) {
-      // Check if there's already a secret ID for this email
-      let secretId = findSecretIdByEmail(email)
-
-      if (!secretId) {
-        // Generate a new secret ID
-        secretId = crypto.randomBytes(4).toString("hex")
-        issuedSecrets[secretId] = email
-
-        // Store in database for persistence
-        try {
-          const { db } = await connectToDatabase()
-          await db.collection("voters").updateOne({ email }, { $set: { secretId } }, { upsert: true })
-        } catch (dbError) {
-          console.error(`Error storing secret ID for ${email} in database:`, dbError)
-          // Continue anyway since we have it in memory
-        }
-      }
-
-      // Encrypt the secret ID for the URL
-      const encryptedSecretId = encrypt(secretId)
-      const frontendBaseURL = process.env.NEXT_PUBLIC_FRONTEND_URL || "https://sawty-voting.vercel.app/"
-      const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSecretId)}`
-
-      // Send email with the login link
+      console.log(`Processing email: ${email}`);
+      
       try {
-        await sendEmail({
-          to: email,
-          subject: "Your Sawty Voting Link",
-          text: `Hello,
+        // Check if there's already a digital signature stored in Redis
+        let digitalSignature: string | null = null;
+        try {
+          digitalSignature = await redis.get<string>(`email:${email}`);
+          console.log(`Existing signature for ${email}: ${digitalSignature ? "Found" : "Not found"}`);
+        } catch (redisError) {
+          console.error(`Redis error when getting signature for ${email}:`, redisError);
+        }
+
+        if (!digitalSignature) {
+          // If not found, generate a new one
+          digitalSignature = crypto.randomBytes(4).toString("hex")
+          console.log(`Generated new digital signature for ${email}: ${digitalSignature}`);
+
+          // Save the digitalSignature -> email mapping
+          try {
+            await redis.set(`email:${email}`, digitalSignature)
+            await redis.set(`secret:${digitalSignature}`, email)
+            console.log(`Saved mappings for ${email} <-> ${digitalSignature}`);
+          } catch (redisSaveError) {
+            console.error(`Redis error when saving signature for ${email}:`, redisSaveError);
+            // Continue anyway, we'll still try to send the email
+          }
+        }
+
+        // Encrypt the digital signature for URL
+        const encryptedSignature = encrypt(digitalSignature)
+        const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSignature)}`
+        console.log(`Generated login link for ${email}`);
+
+        // Send email
+        try {
+          await sendEmail({
+            to: email,
+            subject: "Your Sawty Voting Link",
+            text: `Hello,
 
 You have been assigned a secure voting link by Sawty.
 
@@ -56,32 +106,54 @@ Please do not share it with anyone.
 
 Thank you,
 Sawty Voting Team`,
-        })
+          })
 
-        console.log(`✅ Secure Voting Link sent to ${email}`)
-        results.push({ email, secretId, status: "success" })
-      } catch (emailError) {
-        console.error(`❌ Failed to send to ${email}`, emailError)
-        results.push({ email, status: "failed", error: emailError.message })
+          console.log(`✅ Secure Voting Link sent to ${email}`);
+          results.push({ email, digitalSignature, status: "success" });
+        } catch (emailError) {
+          console.error(`❌ Failed to send to ${email}:`, emailError);
+          results.push({ 
+            email, 
+            status: "failed", 
+            error: emailError instanceof Error 
+              ? emailError.message 
+              : String(emailError) 
+          });
+        }
+      } catch (processingError) {
+        console.error(`Error processing ${email}:`, processingError);
+        results.push({ 
+          email, 
+          status: "failed", 
+          error: "Internal processing error" 
+        });
       }
     }
 
+    // Log statistics
+    const successCount = results.filter(r => r.status === "success").length;
+    const failCount = results.filter(r => r.status === "failed").length;
+    console.log(`Generate-for-all completed. Success: ${successCount}, Failed: ${failCount}`);
+
     return NextResponse.json({
       message: "Done sending secure links to mailing list",
+      stats: {
+        total: results.length,
+        success: successCount,
+        failed: failCount
+      },
       results,
     })
   } catch (error) {
-    console.error("Error generating secrets for all:", error)
-    return NextResponse.json({ message: "Server error. Please try again later." }, { status: 500 })
+    console.error("Error in generate-for-all endpoint:", error);
+    
+    const errorMessage = error instanceof Error 
+      ? error.message 
+      : String(error);
+      
+    return NextResponse.json({ 
+      message: "Server error. Please try again later.",
+      error: errorMessage 
+    }, { status: 500 })
   }
-}
-
-// Helper function to find a secret ID by email
-function findSecretIdByEmail(email: string) {
-  for (const [secretId, mappedEmail] of Object.entries(issuedSecrets)) {
-    if (mappedEmail === email) {
-      return secretId
-    }
-  }
-  return null
 }

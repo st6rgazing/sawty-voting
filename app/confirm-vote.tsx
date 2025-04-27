@@ -14,14 +14,20 @@ const candidates = [
   {
     id: "1",
     name: "Team 6",
-    party: "Progressive Party",
-    image: "/placeholder.svg?height=300&width=300",
+    party: "Transparency Party",
+    image: "/team6-member1.png?height=300&width=300",
   },
   {
     id: "2",
     name: "Also team 6",
-    party: "Liberty Alliance",
-    image: "/placeholder.svg?height=300&width=300",
+    party: "No corruption Party",
+    image: "/team6-member2.png?height=300&width=300",
+  },
+  {
+    id: "3",
+    name: "Absolutely team 6",
+    party: "No corruption Party",
+    image: "/team6-member.png?height=300&width=300",
   },
 ]
 
@@ -34,9 +40,16 @@ export default function ConfirmVotePage() {
   const [success, setSuccess] = useState(false)
 
   useEffect(() => {
+
+    let value: string | null = null;
+
+if (typeof window !== "undefined") {
+  const storedSecretId = localStorage.getItem("secretId")
+  const selectedCandidateId = localStorage.getItem("selectedCandidate")
+}
+
     // Check if user is authenticated and has selected a candidate
-    const storedSecretId = localStorage.getItem("secretId")
-    const selectedCandidateId = localStorage.getItem("selectedCandidate")
+
 
     if (!storedSecretId) {
       router.push("/")

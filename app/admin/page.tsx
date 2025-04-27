@@ -63,7 +63,7 @@ export default function AdminPage() {
         setResults(data.results)
         setShowResults(true)
       } else {
-        alert("Failed to generate Secret IDs. Please try again later.")
+        alert("Failed to generate Digital Signatures. Please try again later.")
       }
     } catch (error) {
       alert("An unexpected error occurred. Please try again.")
@@ -123,7 +123,7 @@ export default function AdminPage() {
             </div>
             <CardTitle className="text-3xl">Sawty Admin Dashboard</CardTitle>
             <CardDescription>
-              Send Secret IDs to all registered voters for secure access to the voting platform
+              Send Digital Signatures to all registered voters for secure access to the voting platform
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -135,7 +135,7 @@ export default function AdminPage() {
                 className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
               >
                 <Mail className="h-5 w-5" />
-                {loading ? "Processing..." : "Generate & Send Secret IDs"}
+                {loading ? "Processing..." : "Generate & Send Digital Signatures"}
               </Button>
 
               <Link href="/votes">
@@ -151,7 +151,7 @@ export default function AdminPage() {
                 <Alert className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
                   <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                   <AlertTitle>Operation Complete</AlertTitle>
-                  <AlertDescription>Secret IDs have been generated and sent to registered voters.</AlertDescription>
+                  <AlertDescription>Digital Signatures have been generated and sent to registered voters.</AlertDescription>
                 </Alert>
 
                 <div className="rounded-md border">

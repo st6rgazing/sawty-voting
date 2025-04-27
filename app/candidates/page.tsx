@@ -13,21 +13,44 @@ import { Info, ArrowRight } from "lucide-react"
 const candidates = [
   {
     id: "1",
+<<<<<<< HEAD
     name: "Alex Johnson",
     party: "Progressive Party",
     image: "/placeholder.svg?height=300&width=300",
     shortDescription: "Committed to environmental sustainability and social justice.",
+=======
+    name: "Team 6",
+    party: "Web Development",
+    image: "/images/team6-member1.png",
+    shortDescription: "Building innovative web solutions with modern frameworks.",
+>>>>>>> 745728c3dfd3d489721994d3823fe2837f9ae39a
     fullDescription:
-      "Alex Johnson has been a community organizer for over 15 years, focusing on environmental sustainability initiatives and social justice reforms. With a background in environmental law, Alex has successfully advocated for cleaner energy policies and community-based solutions to climate change.",
+      "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
   },
   {
     id: "2",
+<<<<<<< HEAD
     name: "Sam Rivera",
     party: "Liberty Alliance",
     image: "/placeholder.svg?height=300&width=300",
     shortDescription: "Advocating for economic growth and individual freedoms.",
+=======
+    name: "Also Team 6",
+    party: "Quantum Computing",
+    image: "/images/team6-member2.png",
+    shortDescription: "Creating intelligent solutions with advanced algorithms.",
+>>>>>>> 745728c3dfd3d489721994d3823fe2837f9ae39a
     fullDescription:
-      "Sam Rivera is a business leader with a strong track record of creating jobs and stimulating economic growth. Sam believes in reducing regulations that hamper small businesses and advocates for policies that empower individuals to achieve their full potential.",
+      "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
+  },
+  {
+    id: "3",
+    name: "Absolutely Team 6",
+    party: "Blockchain Technology",
+    image: "/images/team6-member3.png",
+    shortDescription: "Exploring decentralized solutions for secure voting systems.",
+    fullDescription:
+      "Absolutely Team 6 has pioneered blockchain applications for secure and transparent systems. Their expertise spans across smart contract development, decentralized applications, and cryptographic techniques to ensure data integrity and privacy in digital voting platforms.",
   },
   {
     id: "3",
@@ -113,7 +136,7 @@ export default function CandidatesPage() {
               </Button>
 
               <div className="relative h-32 sm:h-40 w-full">
-                <Image src={candidate.image || "/placeholder.svg"} alt={candidate.name} fill className="object-cover" />
+                <Image src={candidate.image || "/placeholder.png"} alt={candidate.name} fill className="object-cover" />
               </div>
 
               <CardContent className="p-3">
