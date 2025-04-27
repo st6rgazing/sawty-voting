@@ -14,63 +14,35 @@ const candidates = [
     name: "Team 6",
     party: "Web Development",
     image: "/images/team6-member1.png",
-    shortDescription: "Building innovative web solutions with modern frameworks.",
+    shortDescription: "Fixing voting everywhere!",
     fullDescription:
-      "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
+      "Making democracy democracy.",
     policies: [
-      "Server-side rendering for optimal performance",
-      "Responsive design for all device sizes",
-      "Accessibility compliance (WCAG 2.1)",
-      "Modern state management with React hooks",
-      "Progressive Web App capabilities",
+      "Honesty"
     ],
   },
   {
     id: "2",
     name: "Also Team 6",
-    party: "AI & Machine Learning",
+    party: "No corruption Party",
     image: "/images/team6-member2.png",
-    shortDescription: "Creating intelligent solutions with advanced algorithms.",
+    shortDescription: "Fixing voting everywhere!",
     fullDescription:
-      "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
+      "Making democracy democracy.",
     policies: [
-      "Natural Language Processing for user queries",
-      "Computer vision for identity verification",
-      "Predictive analytics for user behavior",
-      "Sentiment analysis for feedback processing",
-      "Real-time data processing pipelines",
+      "Honesty"
     ],
   },
   {
     id: "3",
-    name: "Absolutely Team 6",
-    party: "Blockchain Technology",
+    name: "Not Team 6",
+    party: "Vote Team 6!",
     image: "/images/team6-member3.png",
-    shortDescription: "Exploring decentralized solutions for secure voting systems.",
+    shortDescription: "Loved all your presentations guys!",
     fullDescription:
-      "Absolutely Team 6 has pioneered blockchain applications for secure and transparent systems. Their expertise spans across smart contract development, decentralized applications, and cryptographic techniques to ensure data integrity and privacy in digital voting platforms.",
+      "Amazing amazing effort put into all the projects! Honoured to be able to see this first hand !!",
     policies: [
-      "Immutable blockchain voting records",
-      "Zero-knowledge proof verification",
-      "Decentralized identity management",
-      "Transparent audit trails",
-      "Smart contract-based automation",
-    ],
-  },
-  {
-    id: "4",
-    name: "Morgan Lee",
-    party: "Future Forward",
-    image: "/placeholder.png?height=300&width=300",
-    shortDescription: "Embracing technology and innovation to solve tomorrow's challenges.",
-    fullDescription:
-      "Morgan Lee is a tech entrepreneur and policy innovator who believes in harnessing the power of technology to address society's most pressing challenges. Morgan advocates for investment in education, research, and digital infrastructure to prepare citizens for the jobs of the future.",
-    policies: [
-      "Universal broadband access",
-      "STEM education funding increase",
-      "Research grants for clean energy technology",
-      "Modernize government digital services",
-      "Ethical AI development framework",
+      "Changing the future",
     ],
   },
 ]

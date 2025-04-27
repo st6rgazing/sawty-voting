@@ -20,7 +20,7 @@ const getCandidateName = (id: string) => {
   const options = {
     "1": "Team 6",
     "2": "Also Team 6",
-    "3": "Absolutely Team 6",
+    "3": "Not Team 6",
   }
   return options[id as keyof typeof options] || `Option ${id}`
 }

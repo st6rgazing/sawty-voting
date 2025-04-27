@@ -13,52 +13,42 @@ import { Info, ArrowRight } from "lucide-react"
 const candidates = [
   {
     id: "1",
-
     name: "Team 6",
     party: "Web Development",
     image: "/images/team6-member1.png",
-    shortDescription: "Building innovative web solutions with modern frameworks.",
+    shortDescription: "Fixing voting everywhere!",
     fullDescription:
-      "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
+      "Making democracy democracy.",
+    policies: [
+      "Honesty"
+    ],
   },
   {
     id: "2",
-
     name: "Also Team 6",
-    party: "Quantum Computing",
+    party: "No corruption Party",
     image: "/images/team6-member2.png",
-    shortDescription: "Creating intelligent solutions with advanced algorithms.",
+    shortDescription: "Fixing voting everywhere!",
     fullDescription:
-      "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
+      "Making democracy democracy.",
+    policies: [
+      "Honesty"
+    ],
   },
   {
     id: "3",
-    name: "Absolutely Team 6",
-    party: "Blockchain Technology",
+    name: "Not Team 6",
+    party: "Vote Team 6!",
     image: "/images/team6-member3.png",
-    shortDescription: "Exploring decentralized solutions for secure voting systems.",
+    shortDescription: "Loved all your presentations guys!",
     fullDescription:
-      "Absolutely Team 6 has pioneered blockchain applications for secure and transparent systems. Their expertise spans across smart contract development, decentralized applications, and cryptographic techniques to ensure data integrity and privacy in digital voting platforms.",
-  },
-  {
-    id: "3",
-    name: "Jordan Taylor",
-    party: "Unity Coalition",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Building bridges across political divides for common progress.",
-    fullDescription:
-      "Jordan Taylor has served as a mediator in various political contexts, bringing opposing sides together to find common ground. With experience in both the public and private sectors, Jordan focuses on practical solutions that can gain support across the political spectrum.",
-  },
-  {
-    id: "4",
-    name: "Morgan Lee",
-    party: "Future Forward",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Embracing technology and innovation to solve tomorrow's challenges.",
-    fullDescription:
-      "Morgan Lee is a tech entrepreneur and policy innovator who believes in harnessing the power of technology to address society's most pressing challenges. Morgan advocates for investment in education, research, and digital infrastructure to prepare citizens for the jobs of the future.",
+      "Amazing amazing effort put into all the projects! Honoured to be able to see this first hand !!",
+    policies: [
+      "Changing the future",
+    ],
   },
 ]
+
 
 export default function CandidatesPage() {
   const router = useRouter()
