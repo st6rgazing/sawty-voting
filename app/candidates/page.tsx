@@ -80,7 +80,7 @@ export default function CandidatesPage() {
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-3 text-slate-900 dark:text-white">
-            Who deservees a standing ovation for their presentation?
+            Who deserves a standing ovation for their presentation?
           </h1>
           <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
             Select a candidate by clicking on their card. Review their information before confirming your vote.
