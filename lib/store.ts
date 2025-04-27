@@ -1,97 +1,28 @@
-import {
-  setSecret,
-  deleteSecret,
-  getAllSecrets,
-  addVote as storageAddVote,
-  getAllVotes as storageGetAllVotes,
-} from "./unified-storage"
+import { getKV, setKV, deleteKV } from "@/lib/kv-storage";
 
-// Types
-export interface Secret {
-  secretId: string
-  email: string
-  createdAt: string
+// Save a vote
+export async function addVote({ secretId, encryptedVote, timestamp }: { secretId: string, encryptedVote: string, timestamp: string }) {
+  await setKV(`vote:${secretId}`, JSON.stringify({ secretId, encryptedVote, timestamp }));
 }
 
-export interface Vote {
-  secretId: string
-  encryptedVote: string
-  timestamp: string
+// Validate a secret
+export async function isSecretValid(secretId: string) {
+  const email = await getKV(`secret:${secretId}`);
+  return !!email;
 }
 
-// In-memory cache for issued secrets (will reset on server restart)
-export const issuedSecrets: Record<string, string> = {}
-
-// Initialize the in-memory cache from storage
-export async function initializeSecrets(): Promise<void> {
-  try {
-    const secrets = await getAllSecrets()
-
-    // Clear the current cache
-    Object.keys(issuedSecrets).forEach((key) => delete issuedSecrets[key])
-
-    // Populate the cache
-    secrets.forEach((secret) => {
-      issuedSecrets[secret.secretId] = secret.email
-    })
-
-    console.log(`Loaded ${secrets.length} secrets into memory`)
-  } catch (error) {
-    console.error("Error initializing secrets:", error)
-  }
+// Remove a secret
+export async function removeSecret(secretId: string) {
+  await deleteKV(`secret:${secretId}`);
 }
 
-// Helper functions
-export function findSecretIdByEmail(email: string): string | null {
-  for (const [secretId, mappedEmail] of Object.entries(issuedSecrets)) {
-    if (mappedEmail === email) {
-      return secretId
-    }
-  }
-  return null
+// Find secret ID by email
+export async function findSecretIdByEmail(email: string) {
+  return await getKV<string>(`email:${email}`);
 }
 
-export async function addSecret(secretId: string, email: string): Promise<void> {
-  // Add to in-memory cache
-  issuedSecrets[secretId] = email
-
-  // Add to storage
-  try {
-    await setSecret({
-      secretId,
-      email,
-      createdAt: new Date().toISOString(),
-    })
-  } catch (error) {
-    console.error("Error adding secret to storage:", error)
-  }
-}
-
-export async function removeSecret(secretId: string): Promise<void> {
-  // Remove from in-memory cache
-  delete issuedSecrets[secretId]
-
-  // Remove from storage
-  try {
-    await deleteSecret(secretId)
-  } catch (error) {
-    console.error("Error removing secret from storage:", error)
-  }
-}
-
-export function isSecretValid(secretId: string): boolean {
-  return !!issuedSecrets[secretId]
-}
-
-export async function addVote(vote: Vote): Promise<void> {
-  try {
-    await storageAddVote(vote)
-  } catch (error) {
-    console.error("Error adding vote to storage:", error)
-    throw error
-  }
-}
-
-export async function getAllVotes(): Promise<Vote[]> {
-  return await storageGetAllVotes()
+// Save a new secret
+export async function addSecret(secretId: string, email: string) {
+  await setKV(`email:${email}`, secretId);
+  await setKV(`secret:${secretId}`, email);
 }

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     }
 
     // Check if the secret ID is valid
-    if (isSecretValid(secretId)) {
+    if (await isSecretValid(secretId)) {
       return NextResponse.json({ valid: true, message: "Valid Secret ID." })
     } else {
       return NextResponse.json({ valid: false, message: "Invalid or expired Secret ID." }, { status: 400 })
