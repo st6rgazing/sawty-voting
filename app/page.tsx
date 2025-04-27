@@ -16,7 +16,7 @@ import { decrypt } from "@/lib/encryption"
 export default function Home() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [secretId, setSecretId] = useState("")
+  const [digitalSignature, setDigitalSignature] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -25,9 +25,9 @@ export default function Home() {
     const token = searchParams.get("token")
     if (token) {
       try {
-        // Decrypt the token to get the secret ID
-        const decryptedSecretId = decrypt(token)
-        setSecretId(decryptedSecretId)
+        // Decrypt the token to get the digital signature
+        const decryptedDigitalSignature = decrypt(token)
+        setDigitalSignature(decryptedDigitalSignature)
         // No auto-submit
       } catch (err) {
         console.error("Error decrypting token:", err)
@@ -40,22 +40,22 @@ export default function Home() {
     e.preventDefault()
     setError("")
 
-    if (!secretId) {
-      setError("Please enter your Secret ID")
+    if (!digitalSignature) {
+      setError("Please enter your Digital Signature")
       return
     }
 
     setLoading(true)
 
     try {
-      const { success, data } = await verifySecretId(secretId)
+      const { success, data } = await verifySecretId(digitalSignature)
 
       if (success && data.valid) {
-        // Store the secret ID in localStorage
-        localStorage.setItem("secretId", secretId)
+        // Store the digital signature in localStorage
+        localStorage.setItem("secretId", digitalSignature)
         router.push("/candidates")
       } else {
-        setError(data.message || "Invalid or expired Secret ID")
+        setError(data.message || "Invalid or expired Digital Signature")
       }
     } catch (err) {
       setError("Server error. Please try again later.")
@@ -64,7 +64,7 @@ export default function Home() {
     }
   }
 
-  const handleResendSecretId = async () => {
+  const handleResendDigitalSignature = async () => {
     // In a real app, this would open a modal or form to enter email
     const email = prompt("Enter your email:")
     if (!email) return
@@ -94,14 +94,11 @@ export default function Home() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">
-              Welcome to Sawty صوتي
+              Welcome to Sawty
             </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8">
-            By NYUAD
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8">
-            Your unconditionally secure, quantum-powered e-voting platform.
+              Your secure, quantum-powered e-voting platform
             </p>
 
             <div className="max-w-md mx-auto mb-6">
@@ -109,15 +106,15 @@ export default function Home() {
                 <CardContent className="pt-4 sm:pt-6">
                   <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                     <div className="space-y-1 sm:space-y-2">
-                      <Label htmlFor="secret-id">Enter Your Secret ID</Label>
+                      <Label htmlFor="digital-signature">Enter Your Digital Signature</Label>
                       <div className="relative">
                         <KeyRound className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                         <Input
-                          id="secret-id"
+                          id="digital-signature"
                           type="text"
-                          placeholder="Enter your Secret ID"
-                          value={secretId}
-                          onChange={(e) => setSecretId(e.target.value)}
+                          placeholder="Enter your Digital Signature"
+                          value={digitalSignature}
+                          onChange={(e) => setDigitalSignature(e.target.value)}
                           className="pl-10"
                         />
                       </div>
@@ -141,10 +138,10 @@ export default function Home() {
                       type="button"
                       variant="link"
                       className="w-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 text-xs sm:text-sm py-0"
-                      onClick={handleResendSecretId}
+                      onClick={handleResendDigitalSignature}
                     >
                       <Mail className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
-                      Lost your Secret ID? Click here to resend it
+                      Lost your Digital Signature? Click here to resend it
                     </Button>
                   </form>
                 </CardContent>

@@ -13,26 +13,20 @@ import { submitVote } from "@/lib/api"
 const candidates = [
   {
     id: "1",
-    name: "Alex Johnson",
+    name: "Team 6",
     party: "Progressive Party",
     image: "/placeholder.svg?height=300&width=300",
   },
   {
     id: "2",
-    name: "Sam Rivera",
+    name: "Also Team 6",
     party: "Liberty Alliance",
     image: "/placeholder.svg?height=300&width=300",
   },
   {
     id: "3",
-    name: "Jordan Taylor",
+    name: "Absolutely Team 6",
     party: "Unity Coalition",
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id: "4",
-    name: "Morgan Lee",
-    party: "Future Forward",
     image: "/placeholder.svg?height=300&width=300",
   },
 ]

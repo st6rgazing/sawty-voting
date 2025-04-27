@@ -58,34 +58,34 @@ export async function POST(request: Request) {
       console.log(`Processing email: ${email}`);
       
       try {
-        // Check if there's already a secret ID stored in Redis
-        let secretId: string | null = null;
+        // Check if there's already a digital signature stored in Redis
+        let digitalSignature: string | null = null;
         try {
-          secretId = await redis.get<string>(`email:${email}`);
-          console.log(`Existing secret for ${email}: ${secretId ? "Found" : "Not found"}`);
+          digitalSignature = await redis.get<string>(`email:${email}`);
+          console.log(`Existing signature for ${email}: ${digitalSignature ? "Found" : "Not found"}`);
         } catch (redisError) {
-          console.error(`Redis error when getting secret for ${email}:`, redisError);
+          console.error(`Redis error when getting signature for ${email}:`, redisError);
         }
 
-        if (!secretId) {
+        if (!digitalSignature) {
           // If not found, generate a new one
-          secretId = crypto.randomBytes(4).toString("hex")
-          console.log(`Generated new secret ID for ${email}: ${secretId}`);
+          digitalSignature = crypto.randomBytes(4).toString("hex")
+          console.log(`Generated new digital signature for ${email}: ${digitalSignature}`);
 
-          // Save the secretId -> email mapping
+          // Save the digitalSignature -> email mapping
           try {
-            await redis.set(`email:${email}`, secretId)
-            await redis.set(`secret:${secretId}`, email)
-            console.log(`Saved mappings for ${email} <-> ${secretId}`);
+            await redis.set(`email:${email}`, digitalSignature)
+            await redis.set(`secret:${digitalSignature}`, email)
+            console.log(`Saved mappings for ${email} <-> ${digitalSignature}`);
           } catch (redisSaveError) {
-            console.error(`Redis error when saving secret for ${email}:`, redisSaveError);
+            console.error(`Redis error when saving signature for ${email}:`, redisSaveError);
             // Continue anyway, we'll still try to send the email
           }
         }
 
-        // Encrypt the secret ID for URL
-        const encryptedSecretId = encrypt(secretId)
-        const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSecretId)}`
+        // Encrypt the digital signature for URL
+        const encryptedSignature = encrypt(digitalSignature)
+        const loginLink = `${frontendBaseURL}/index?token=${encodeURIComponent(encryptedSignature)}`
         console.log(`Generated login link for ${email}`);
 
         // Send email
@@ -109,7 +109,7 @@ Sawty Voting Team`,
           })
 
           console.log(`✅ Secure Voting Link sent to ${email}`);
-          results.push({ email, secretId, status: "success" });
+          results.push({ email, digitalSignature, status: "success" });
         } catch (emailError) {
           console.error(`❌ Failed to send to ${email}:`, emailError);
           results.push({ 
