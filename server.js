@@ -25,7 +25,18 @@ const iv = Buffer.alloc(16, 0) // 16 bytes all zeros IV
 
 const mailingList = process.env.MAILING_LIST
   ? process.env.MAILING_LIST.split(",")
-  : ["mariamshafey3@gmail.com", "deahmedbacha@gmail.com"]
+  : ["mariamshafey3@gmail.com", "deahmedbacha@gmail.com","pawel.gora@qaif.org",
+    "sakibul56@gmail.com",
+    "adh323@lehigh.edu",
+    "espinosa.s@northeastern.edu",
+    "adk05@mail.aub.edu",
+    "jam37@mail.aub.edu",
+    "deahmedbacha@gmail.com",
+    "km_bekkar@esi.dz",
+    "safaebouziani27@gmail.com",
+    "mis9424@nyu.edu",
+    "aaa9988@nyu.edu",
+    "ni2071@nyu.edu"]
 
 const issuedSecrets = {} // { secretId: email }
 let votes = [] // fallback if MongoDB fails

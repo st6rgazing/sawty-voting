@@ -94,11 +94,14 @@ export default function Home() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">
-              Welcome to Sawty
+              Welcome to Sawty صوتي
             </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8">
-              Your secure, quantum-powered e-voting platform
+            By NYUAD
+            </p>
+            <p className="text-lg sm:text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-6 sm:mb-8">
+            Your unconditionally secure, quantum-powered e-voting platform.
             </p>
 
             <div className="max-w-md mx-auto mb-6">
