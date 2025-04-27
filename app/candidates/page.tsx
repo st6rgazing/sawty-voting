@@ -23,7 +23,7 @@ const candidates = [
   {
     id: "2",
     name: "Also Team 6",
-    party: "AI & Machine Learning",
+    party: "Quantum Computing",
     image: "/images/team6-member2.png",
     shortDescription: "Creating intelligent solutions with advanced algorithms.",
     fullDescription:
