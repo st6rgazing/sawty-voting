@@ -10,22 +10,33 @@ export async function POST(request: Request) {
     }
 
     // Check if the secret ID is valid
-    if (!isSecretValid(secretId)) {
+    const isValid = await isSecretValid(secretId)
+    if (!isValid) {
       return NextResponse.json({ message: "Invalid or expired Secret ID." }, { status: 400 })
     }
 
     // Save the vote
     try {
+      // First add the vote before removing the secret to ensure it's saved
       await addVote({
         secretId,
         encryptedVote,
         timestamp: new Date().toISOString(),
       })
 
-      // Remove the secret ID to prevent double voting
-      await removeSecret(secretId)
+      // Only remove the secret ID after vote is saved to prevent double voting
+      try {
+        await removeSecret(secretId)
+      } catch (secretError) {
+        // Log but don't fail the request if removing the secret fails
+        // The vote was still recorded successfully
+        console.error("Warning: Failed to remove secret after vote:", secretError)
+      }
 
-      return NextResponse.json({ message: "Vote submitted securely!" })
+      return NextResponse.json({ 
+        message: "Vote submitted securely!",
+        status: 200
+      })
     } catch (error) {
       console.error("Error saving vote:", error)
 
@@ -35,6 +46,7 @@ export async function POST(request: Request) {
         {
           message: "Error saving vote. Please try again.",
           error: errorMessage,
+          status: 500
         },
         { status: 500 },
       )
@@ -48,6 +60,7 @@ export async function POST(request: Request) {
       {
         message: "Server error. Please try again later.",
         error: errorMessage,
+        status: 500
       },
       { status: 500 },
     )

@@ -81,19 +81,51 @@ export default function ConfirmVotePage() {
       // Encrypt the vote (in a real app, this would be more secure)
       const encryptedVote = btoa(JSON.stringify({ candidateId: candidate.id }))
 
-      const { success, data } = await submitVote(secretId, encryptedVote)
+      // Try up to 3 times with exponential backoff
+      let attempt = 0;
+      let success = false;
+      let data = null;
+      
+      while (attempt < 3 && !success) {
+        attempt++;
+        try {
+          console.log(`Submitting vote attempt ${attempt}...`);
+          const result = await submitVote(secretId, encryptedVote);
+          success = result.success;
+          data = result.data;
+          
+          if (success) {
+            break;
+          } else {
+            // If server error, retry. If client error (400), don't retry
+            const isServerError = data?.status >= 500 || !data?.status;
+            if (!isServerError) break;
+            
+            // Wait before retry (exponential backoff: 1s, 2s, 4s)
+            if (attempt < 3) {
+              const delay = Math.pow(2, attempt - 1) * 1000;
+              console.log(`Retrying in ${delay}ms...`);
+              await new Promise(resolve => setTimeout(resolve, delay));
+            }
+          }
+        } catch (err) {
+          console.error(`Vote submission attempt ${attempt} failed:`, err);
+          // Continue to next attempt
+        }
+      }
 
       if (success) {
-        setSuccess(true)
+        setSuccess(true);
         // Clear the selected candidate but keep the secret ID for reference
-        localStorage.removeItem("selectedCandidate")
+        localStorage.removeItem("selectedCandidate");
       } else {
-        setError(data.message || "Failed to submit vote. Please try again.")
+        setError(data?.message || "Failed to submit vote. Please try again.");
       }
     } catch (err) {
-      setError("Server error. Please try again later.")
+      console.error("Vote submission error:", err);
+      setError("Server error. Please try again later.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 

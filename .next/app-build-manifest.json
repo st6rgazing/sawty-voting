@@ -1,20 +1,19 @@
 {
   "pages": {
-    "/layout": [
+    "/api/submit-vote/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/layout.css",
-      "static/chunks/app/layout.js"
+      "static/chunks/app/api/submit-vote/route.js"
     ],
-    "/login/loading": [
+    "/api/debug-add-secret/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/login/loading.js"
+      "static/chunks/app/api/debug-add-secret/route.js"
     ],
-    "/login/page": [
+    "/api/debug-kv/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/login/page.js"
+      "static/chunks/app/api/debug-kv/route.js"
     ]
   }
 }

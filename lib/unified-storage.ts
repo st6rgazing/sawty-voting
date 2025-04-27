@@ -15,7 +15,17 @@ export interface Vote {
 }
 
 // Determine if we should use KV or fallback
-const useKV = process.env.VERCEL === "1"
+// Check for Vercel environment indicator OR Upstash/Vercel KV credentials
+const useKV = 
+  typeof process !== 'undefined' && (
+    process.env.VERCEL === "1" || 
+    !!process.env.UPSTASH_REDIS_REST_URL || 
+    !!process.env.KV_REST_API_URL ||
+    !!process.env.REDIS_URL
+  )
+
+// Log which storage is being used (helpful for debugging)
+console.log(`Using ${useKV ? 'KV' : 'fallback'} storage system`)
 
 // Secret functions
 export async function getSecret(secretId: string): Promise<Secret | null> {
