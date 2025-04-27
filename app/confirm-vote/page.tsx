@@ -27,7 +27,7 @@ const candidates = [
     id: "3",
     name: "Not Team 6",
     party: "Vote Team 6!",
-    image: "/images/team6-member.png?height=300&width=300",
+    image: "/images/team6-member3.png?height=300&width=300",
   },
 ]
 

@@ -20,14 +20,14 @@ const candidates = [
   {
     id: "2",
     name: "Also team 6",
-    party: "No corruption Party",
+    party: "Fair voting Party",
     image: "/images/team6-member2.png?height=300&width=300",
   },
   {
     id: "3",
     name: "Not Team 6",
     party: "Vote Team 6!",
-    image: "/images/team6-member.png?height=300&width=300",
+    image: "/images/team6-member3.png?height=300&width=300",
   },
 ]
 
