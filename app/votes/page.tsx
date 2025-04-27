@@ -18,9 +18,9 @@ interface Vote {
 // Map candidate IDs to Team 6 options
 const getCandidateName = (id: string) => {
   const options = {
-    "1": "Team 6",
-    "2": "Also Team 6",
-    "3": "Absolutely Team 6",
+    "1": "Team 6 - Web Dev",
+    "2": "Also Team 6 - AI/ML",
+    "3": "Absolutely Team 6 - Blockchain",
   }
   return options[id as keyof typeof options] || `Option ${id}`
 }
@@ -114,14 +114,14 @@ export default function VotesPage() {
             <div className="mb-8 text-center">
               <div className="inline-block mb-4 p-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-full">
                 <div className="px-4 py-1 bg-purple-100 dark:bg-purple-900/30 rounded-full text-sm font-medium text-purple-800 dark:text-purple-200">
-                  Blockchain Voting Results
+                  Anonymous Voting Results
                 </div>
               </div>
               <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">
-                Sawty Vote Chain
+                Sawty Voting
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-300 mb-6">
-                Secure, transparent, and quantum-resistant vote tracking
+                Secure, transparent, and privacy-preserving vote tracking
               </p>
             </div>
 
@@ -203,7 +203,7 @@ export default function VotesPage() {
               <CardHeader className="border-b border-slate-200 dark:border-slate-700/50">
                 <CardTitle className="flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2 text-purple-600" />
-                  Vote Transaction Ledger
+                  Anonymous Vote Records
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
@@ -222,7 +222,6 @@ export default function VotesPage() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-slate-200 dark:border-slate-700">
-                          <TableHead className="text-slate-600 dark:text-slate-400">Transaction ID</TableHead>
                           <TableHead className="text-slate-600 dark:text-slate-400">Vote For</TableHead>
                           <TableHead className="text-slate-600 dark:text-slate-400">Timestamp</TableHead>
                         </TableRow>
@@ -235,9 +234,6 @@ export default function VotesPage() {
                           
                           return (
                             <TableRow key={index} className="border-slate-200 dark:border-slate-700">
-                              <TableCell className="font-mono text-xs text-blue-600 dark:text-blue-400">
-                                {vote.secretId}
-                              </TableCell>
                               <TableCell>
                                 <div className="flex items-center">
                                   {vote.decodedVote?.candidateId ? (
@@ -275,7 +271,7 @@ export default function VotesPage() {
               <div className="mt-8">
                 <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center justify-center">
                   <Database className="h-5 w-5 mr-2 text-purple-600" />
-                  Blockchain Visualization
+                  Anonymous Block Sequence
                 </h2>
                 <div className="flex flex-nowrap overflow-x-auto pb-6 pt-2 space-x-3 px-4">
                   {votes.map((vote, i) => {
@@ -298,10 +294,6 @@ export default function VotesPage() {
                         </div>
                         
                         <div className="my-2">
-                          <div className="font-mono text-xs text-blue-600 dark:text-blue-400 truncate">
-                            {vote.secretId.substring(0, 8)}...
-                          </div>
-                          
                           {vote.decodedVote?.candidateId ? (
                             <div className={`mt-1 px-2 py-0.5 rounded text-xs font-medium ${colorClasses} inline-block`}>
                               {candidateName}

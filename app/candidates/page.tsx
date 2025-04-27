@@ -14,20 +14,29 @@ const candidates = [
   {
     id: "1",
     name: "Team 6",
-    party: "Progressive Party",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Committed to environmental sustainability and social justice.",
+    party: "Web Development",
+    image: "/images/team6-member1.svg",
+    shortDescription: "Building innovative web solutions with modern frameworks.",
     fullDescription:
-      "Alex Johnson has been a community organizer for over 15 years, focusing on environmental sustainability initiatives and social justice reforms. With a background in environmental law, Alex has successfully advocated for cleaner energy policies and community-based solutions to climate change.",
+      "Team 6 has been developing cutting-edge web applications for over 3 years, focusing on user experience and performance optimization. With a strong background in React and Next.js, Team 6 has successfully built scalable frontend architectures and responsive designs.",
   },
   {
     id: "2",
     name: "Also Team 6",
-    party: "Liberty Alliance",
-    image: "/placeholder.svg?height=300&width=300",
-    shortDescription: "Advocating for economic growth and individual freedoms.",
+    party: "AI & Machine Learning",
+    image: "/images/team6-member2.svg",
+    shortDescription: "Creating intelligent solutions with advanced algorithms.",
     fullDescription:
-      "Sam Rivera is a business leader with a strong track record of creating jobs and stimulating economic growth. Sam believes in reducing regulations that hamper small businesses and advocates for policies that empower individuals to achieve their full potential.",
+      "Also Team 6 specializes in artificial intelligence and machine learning implementations. They have developed several projects incorporating computer vision, natural language processing, and predictive analytics to solve real-world problems and enhance user experiences.",
+  },
+  {
+    id: "3",
+    name: "Absolutely Team 6",
+    party: "Blockchain Technology",
+    image: "/images/team6-member3.svg",
+    shortDescription: "Exploring decentralized solutions for secure voting systems.",
+    fullDescription:
+      "Absolutely Team 6 has pioneered blockchain applications for secure and transparent systems. Their expertise spans across smart contract development, decentralized applications, and cryptographic techniques to ensure data integrity and privacy in digital voting platforms.",
   },
 ]
 
