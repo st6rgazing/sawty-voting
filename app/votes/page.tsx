@@ -18,9 +18,9 @@ interface Vote {
 // Map candidate IDs to Team 6 options
 const getCandidateName = (id: string) => {
   const options = {
-    "1": "Team 6 - Web Dev",
-    "2": "Also Team 6 - Quantum Computing",
-    "3": "Absolutely Team 6 - Blockchain",
+    "1": "Team 6",
+    "2": "Also Team 6",
+    "3": "Absolutely Team 6",
   }
   return options[id as keyof typeof options] || `Option ${id}`
 }
