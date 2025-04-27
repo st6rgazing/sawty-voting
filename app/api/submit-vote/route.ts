@@ -28,10 +28,30 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Vote submitted securely!" })
     } catch (error) {
       console.error("Error saving vote:", error)
-      return NextResponse.json({ message: "Error saving vote. Please try again." }, { status: 500 })
+
+      // More detailed error for debugging
+      const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+
+      return NextResponse.json(
+        {
+          message: "Error saving vote. Please try again.",
+          error: errorMessage,
+        },
+        { status: 500 },
+      )
     }
   } catch (error) {
     console.error("Error submitting vote:", error)
-    return NextResponse.json({ message: "Server error. Please try again later." }, { status: 500 })
+
+    // More detailed error for debugging
+    const errorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error)
+
+    return NextResponse.json(
+      {
+        message: "Server error. Please try again later.",
+        error: errorMessage,
+      },
+      { status: 500 },
+    )
   }
 }

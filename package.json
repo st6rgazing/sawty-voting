@@ -73,7 +73,8 @@
     "path": "latest",
     "mongoose": "latest",
     "xlsx": "latest",
-    "mongodb": "latest"
+    "mongodb": "latest",
+    "@vercel/kv": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

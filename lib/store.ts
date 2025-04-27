@@ -1,8 +1,10 @@
-import { readJsonFile, writeJsonFile, removeFromJsonFile } from "./file-storage"
-
-// File names
-const SECRETS_FILE = "secrets.json"
-const VOTES_FILE = "votes.json"
+import {
+  setSecret,
+  deleteSecret,
+  getAllSecrets,
+  addVote as storageAddVote,
+  getAllVotes as storageGetAllVotes,
+} from "./unified-storage"
 
 // Types
 export interface Secret {
@@ -20,10 +22,10 @@ export interface Vote {
 // In-memory cache for issued secrets (will reset on server restart)
 export const issuedSecrets: Record<string, string> = {}
 
-// Initialize the in-memory cache from the file
+// Initialize the in-memory cache from storage
 export async function initializeSecrets(): Promise<void> {
   try {
-    const secrets = await readJsonFile<Secret[]>(SECRETS_FILE, [])
+    const secrets = await getAllSecrets()
 
     // Clear the current cache
     Object.keys(issuedSecrets).forEach((key) => delete issuedSecrets[key])
@@ -53,32 +55,15 @@ export async function addSecret(secretId: string, email: string): Promise<void> 
   // Add to in-memory cache
   issuedSecrets[secretId] = email
 
-  // Add to file storage
+  // Add to storage
   try {
-    const secrets = await readJsonFile<Secret[]>(SECRETS_FILE, [])
-
-    // Check if secret already exists
-    const existingIndex = secrets.findIndex((s) => s.secretId === secretId)
-
-    if (existingIndex >= 0) {
-      // Update existing secret
-      secrets[existingIndex] = {
-        secretId,
-        email,
-        createdAt: new Date().toISOString(),
-      }
-    } else {
-      // Add new secret
-      secrets.push({
-        secretId,
-        email,
-        createdAt: new Date().toISOString(),
-      })
-    }
-
-    await writeJsonFile(SECRETS_FILE, secrets)
+    await setSecret({
+      secretId,
+      email,
+      createdAt: new Date().toISOString(),
+    })
   } catch (error) {
-    console.error("Error adding secret to file:", error)
+    console.error("Error adding secret to storage:", error)
   }
 }
 
@@ -86,11 +71,11 @@ export async function removeSecret(secretId: string): Promise<void> {
   // Remove from in-memory cache
   delete issuedSecrets[secretId]
 
-  // Remove from file storage
+  // Remove from storage
   try {
-    await removeFromJsonFile<Secret>(SECRETS_FILE, "secretId", secretId)
+    await deleteSecret(secretId)
   } catch (error) {
-    console.error("Error removing secret from file:", error)
+    console.error("Error removing secret from storage:", error)
   }
 }
 
@@ -100,15 +85,13 @@ export function isSecretValid(secretId: string): boolean {
 
 export async function addVote(vote: Vote): Promise<void> {
   try {
-    const votes = await readJsonFile<Vote[]>(VOTES_FILE, [])
-    votes.push(vote)
-    await writeJsonFile(VOTES_FILE, votes)
+    await storageAddVote(vote)
   } catch (error) {
-    console.error("Error adding vote to file:", error)
+    console.error("Error adding vote to storage:", error)
     throw error
   }
 }
 
 export async function getAllVotes(): Promise<Vote[]> {
-  return await readJsonFile<Vote[]>(VOTES_FILE, [])
+  return await storageGetAllVotes()
 }
