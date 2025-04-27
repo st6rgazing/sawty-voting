@@ -4,6 +4,23 @@ import { issuedSecrets } from "@/lib/store"
 import { encrypt } from "@/lib/encryption"
 import { sendEmail } from "@/lib/email"
 import crypto from "crypto"
+import { Redis } from '@upstash/redis';
+import { NextResponse } from 'next/server';
+
+// Initialize Redis from env vars
+const redis = Redis.fromEnv();
+
+// Handle POST request
+export async function POST(request) {
+  // Set an item
+  await redis.set("test-key", "Hello from Redis!");
+
+  // Get the item
+  const value = await redis.get("test-key");
+
+  return NextResponse.json({ value });
+}
+
 
 export async function POST(request: Request) {
   try {
