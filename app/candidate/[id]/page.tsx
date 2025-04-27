@@ -24,7 +24,7 @@ const candidates = [
   {
     id: "2",
     name: "Also Team 6",
-    party: "No corruption Party",
+    party: "Fair voting Party",
     image: "/images/team6-member2.png",
     shortDescription: "Fixing voting everywhere!",
     fullDescription:

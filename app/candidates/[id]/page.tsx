@@ -13,7 +13,7 @@ const candidates = [
     id: "1",
 
     name: "Team 6",
-    party: "Web Development",
+    party: "Transparency party",
     image: "/images/team6-member1.png",
     shortDescription: "Building innovative web solutions with modern frameworks.",
     fullDescription:
